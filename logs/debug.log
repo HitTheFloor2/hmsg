@@ -1602,3 +1602,463 @@ name: "Hello"
 length: 233
 name: "Hello"
 
+[DEBUG] 19:11:46 : Using Log4J as the default logging framework
+[DEBUG] 19:11:46 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 19:11:46 : java.nio.Buffer.address: available
+[DEBUG] 19:11:46 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 19:11:46 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 19:11:46 : java.nio.Bits.unaligned: true
+[DEBUG] 19:11:46 : Platform: Windows
+[DEBUG] 19:11:46 : Java version: 8
+[DEBUG] 19:11:46 : -Dio.netty.noUnsafe: false
+[DEBUG] 19:11:46 : sun.misc.Unsafe: available
+[DEBUG] 19:11:46 : -Dio.netty.noJavassist: false
+[DEBUG] 19:11:46 : Javassist: unavailable
+[DEBUG] 19:11:46 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 19:11:46 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 19:11:46 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 19:11:46 : -Dio.netty.noPreferDirect: false
+[DEBUG] 19:11:46 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 19:11:46 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 19:11:46 : -Dio.netty.processId: 16440 (auto-detected)
+[DEBUG] 19:11:46 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 19:11:46 : -Dio.netty.initialSeedUniquifier: 0xd5c6e3f68310b32e (took 21 ms)
+[DEBUG] 19:11:46 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 19:11:46 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 19:11:46 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 19:11:46 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 19:11:46 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 19:11:46 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 19:11:46 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 19:11:46 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 19:11:46 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 19:11:46 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 19:11:46 : -Dio.netty.allocator.type: pooled
+[DEBUG] 19:11:46 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 19:11:47 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 19:11:47 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 19:11:47 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[INFO] 19:11:47 : TestServer.run() TestServer /127.0.0.1:8081 started!
+[INFO] 19:11:47 : TestServerHandler.channelRegistered() this channel is[id: 0xad74049d]
+[INFO] 19:11:47 : TestServerClient.addServer connected:[id: 0xad74049d, /127.0.0.1:7822 => /127.0.0.1:8081]
+[INFO] 19:11:47 : TestServerHandler.channelRegistered() this channel is[id: 0x1d13ae39, /127.0.0.1:7822 => /127.0.0.1:8081]
+[DEBUG] 19:11:49 : -Dio.netty.recycler.maxCapacity: 262144
+[DEBUG] 19:11:49 : -Dio.netty.leakDetectionLevel: simple
+[INFO] 19:11:49 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 19:11:52 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 19:11:55 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[DEBUG] 20:01:39 : Using Log4J as the default logging framework
+[DEBUG] 20:01:39 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:01:39 : java.nio.Buffer.address: available
+[DEBUG] 20:01:39 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:01:39 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:01:39 : java.nio.Bits.unaligned: true
+[DEBUG] 20:01:39 : Platform: Windows
+[DEBUG] 20:01:39 : Java version: 8
+[DEBUG] 20:01:39 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:01:39 : sun.misc.Unsafe: available
+[DEBUG] 20:01:39 : -Dio.netty.noJavassist: false
+[DEBUG] 20:01:39 : Javassist: unavailable
+[DEBUG] 20:01:39 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:01:39 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:01:39 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:01:39 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:01:39 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:01:39 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:01:40 : -Dio.netty.processId: 15424 (auto-detected)
+[DEBUG] 20:01:40 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:01:40 : -Dio.netty.initialSeedUniquifier: 0xe427ffe9ae4035de (took 24 ms)
+[DEBUG] 20:01:40 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:01:40 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:01:40 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:01:40 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:01:40 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:01:40 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:01:40 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:01:40 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:01:40 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:01:40 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:01:40 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:01:40 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:01:40 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:01:40 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:01:40 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[DEBUG] 20:03:01 : Using Log4J as the default logging framework
+[DEBUG] 20:03:01 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:03:01 : java.nio.Buffer.address: available
+[DEBUG] 20:03:01 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:03:01 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:03:01 : java.nio.Bits.unaligned: true
+[DEBUG] 20:03:01 : Platform: Windows
+[DEBUG] 20:03:01 : Java version: 8
+[DEBUG] 20:03:01 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:03:01 : sun.misc.Unsafe: available
+[DEBUG] 20:03:01 : -Dio.netty.noJavassist: false
+[DEBUG] 20:03:01 : Javassist: unavailable
+[DEBUG] 20:03:01 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:03:01 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:03:01 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:03:01 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:03:01 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:03:01 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:03:05 : -Dio.netty.processId: 16596 (auto-detected)
+[DEBUG] 20:03:05 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:03:05 : -Dio.netty.initialSeedUniquifier: 0xe19716f34d3f27c6 (took 11 ms)
+[DEBUG] 20:03:05 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:03:05 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:03:05 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:03:05 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:03:05 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:03:05 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:03:05 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:03:05 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:03:05 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:03:05 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:03:05 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:03:05 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:03:05 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:03:05 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:03:06 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[DEBUG] 20:03:39 : Using Log4J as the default logging framework
+[DEBUG] 20:03:39 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:03:39 : java.nio.Buffer.address: available
+[DEBUG] 20:03:39 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:03:39 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:03:39 : java.nio.Bits.unaligned: true
+[DEBUG] 20:03:39 : Platform: Windows
+[DEBUG] 20:03:39 : Java version: 8
+[DEBUG] 20:03:39 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:03:39 : sun.misc.Unsafe: available
+[DEBUG] 20:03:39 : -Dio.netty.noJavassist: false
+[DEBUG] 20:03:39 : Javassist: unavailable
+[DEBUG] 20:03:39 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:03:39 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:03:39 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:03:39 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:03:39 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:03:39 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:03:39 : -Dio.netty.processId: 19408 (auto-detected)
+[DEBUG] 20:03:40 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:03:40 : -Dio.netty.initialSeedUniquifier: 0x5ec56c09ac4e6cef (took 27 ms)
+[DEBUG] 20:03:40 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:03:40 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:03:40 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:03:40 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:03:40 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:03:40 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:03:40 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:03:40 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:03:40 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:03:40 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:03:40 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:03:40 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:03:40 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:03:40 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:03:40 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[DEBUG] 20:03:46 : Using Log4J as the default logging framework
+[DEBUG] 20:03:46 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:03:46 : java.nio.Buffer.address: available
+[DEBUG] 20:03:46 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:03:46 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:03:46 : java.nio.Bits.unaligned: true
+[DEBUG] 20:03:46 : Platform: Windows
+[DEBUG] 20:03:46 : Java version: 8
+[DEBUG] 20:03:46 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:03:46 : sun.misc.Unsafe: available
+[DEBUG] 20:03:46 : -Dio.netty.noJavassist: false
+[DEBUG] 20:03:46 : Javassist: unavailable
+[DEBUG] 20:03:46 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:03:46 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:03:46 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:03:46 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:03:46 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:03:46 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:03:47 : -Dio.netty.processId: 15172 (auto-detected)
+[DEBUG] 20:03:47 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:03:47 : -Dio.netty.initialSeedUniquifier: 0x075c225a61144501 (took 26 ms)
+[DEBUG] 20:03:47 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:03:47 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:03:47 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:03:47 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:03:47 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:03:47 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:03:47 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:03:47 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:03:47 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:03:47 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:03:47 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:03:47 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:03:47 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:03:47 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:03:47 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[DEBUG] 20:04:27 : Using Log4J as the default logging framework
+[DEBUG] 20:04:27 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:04:27 : java.nio.Buffer.address: available
+[DEBUG] 20:04:27 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:04:27 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:04:27 : java.nio.Bits.unaligned: true
+[DEBUG] 20:04:27 : Platform: Windows
+[DEBUG] 20:04:27 : Java version: 8
+[DEBUG] 20:04:27 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:04:27 : sun.misc.Unsafe: available
+[DEBUG] 20:04:27 : -Dio.netty.noJavassist: false
+[DEBUG] 20:04:27 : Javassist: unavailable
+[DEBUG] 20:04:27 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:04:27 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:04:27 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:04:27 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:04:27 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:04:27 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:04:27 : -Dio.netty.processId: 17632 (auto-detected)
+[DEBUG] 20:04:27 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:04:27 : -Dio.netty.initialSeedUniquifier: 0x6bb3059b3944c34d (took 22 ms)
+[DEBUG] 20:04:27 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:04:27 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:04:27 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:04:27 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:04:27 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:04:27 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:04:27 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:04:27 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:04:27 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:04:27 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:04:27 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:04:27 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:04:27 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:04:27 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:04:27 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[DEBUG] 20:05:04 : Using Log4J as the default logging framework
+[DEBUG] 20:05:04 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:05:04 : java.nio.Buffer.address: available
+[DEBUG] 20:05:04 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:05:04 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:05:04 : java.nio.Bits.unaligned: true
+[DEBUG] 20:05:04 : Platform: Windows
+[DEBUG] 20:05:04 : Java version: 8
+[DEBUG] 20:05:04 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:05:04 : sun.misc.Unsafe: available
+[DEBUG] 20:05:04 : -Dio.netty.noJavassist: false
+[DEBUG] 20:05:04 : Javassist: unavailable
+[DEBUG] 20:05:04 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:05:04 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:05:04 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:05:04 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:05:04 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:05:04 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:05:04 : -Dio.netty.processId: 11736 (auto-detected)
+[DEBUG] 20:05:04 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:05:04 : -Dio.netty.initialSeedUniquifier: 0x45ab7ca4da9af79b (took 22 ms)
+[DEBUG] 20:05:04 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:05:04 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:05:04 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:05:04 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:05:04 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:05:04 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:05:04 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:05:04 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:05:04 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:05:04 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:05:04 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:05:04 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:05:05 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:05:05 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:05:05 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[INFO] 20:05:05 : TestServer.run() TestServer /127.0.0.1:8081 started!
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0xff3e07df]
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0x71128bed]
+[INFO] 20:05:05 : TestServerClient.syncAddServer connected[id: 0x71128bed, /127.0.0.1:9416 => /127.0.0.1:8080]
+[INFO] 20:05:05 : TestServerClient.run: connected: [id: 0x71128bed, /127.0.0.1:9416 => /127.0.0.1:8080], add to channelMap
+[INFO] 20:05:05 : TestServerClient.syncAddServer connected[id: 0xff3e07df, /127.0.0.1:9417 => /127.0.0.1:8080]
+[INFO] 20:05:05 : TestServerClient.run: connected: [id: 0xff3e07df, /127.0.0.1:9417 => /127.0.0.1:8080], add to channelMap
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0x846ff33f, /127.0.0.1:9417 => /127.0.0.1:8080]
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0x072d98e8, /127.0.0.1:9416 => /127.0.0.1:8080]
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0xb63b84a7]
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0xcf7e7245]
+[INFO] 20:05:05 : TestServerClient.syncAddServer connected[id: 0xb63b84a7, /127.0.0.1:9418 => /127.0.0.1:8081]
+[INFO] 20:05:05 : TestServerClient.run: connected: [id: 0xb63b84a7, /127.0.0.1:9418 => /127.0.0.1:8081], add to channelMap
+[INFO] 20:05:05 : TestServerClient.run: servers connection complete!
+[INFO] 20:05:05 : TestServerClient.syncAddServer connected[id: 0xcf7e7245, /127.0.0.1:9419 => /127.0.0.1:8081]
+[INFO] 20:05:05 : TestServerClient.run: connected: [id: 0xcf7e7245, /127.0.0.1:9419 => /127.0.0.1:8081], add to channelMap
+[INFO] 20:05:05 : TestServerClient.run: servers connection complete!
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0xd12f2f4b, /127.0.0.1:9418 => /127.0.0.1:8081]
+[INFO] 20:05:05 : TestServerHandler.channelRegistered() this channel is[id: 0x3a2d8d5b, /127.0.0.1:9419 => /127.0.0.1:8081]
+[DEBUG] 20:05:08 : -Dio.netty.recycler.maxCapacity: 262144
+[DEBUG] 20:05:08 : -Dio.netty.leakDetectionLevel: simple
+[INFO] 20:05:08 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:08 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:11 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:11 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:14 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:14 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:17 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:17 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:20 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:20 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:23 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:23 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[INFO] 20:05:26 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+
+[INFO] 20:05:26 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+
+[DEBUG] 20:14:39 : Using Log4J as the default logging framework
+[DEBUG] 20:14:39 : -Dio.netty.eventLoopThreads: 16
+[DEBUG] 20:14:39 : java.nio.Buffer.address: available
+[DEBUG] 20:14:39 : sun.misc.Unsafe.theUnsafe: available
+[DEBUG] 20:14:39 : sun.misc.Unsafe.copyMemory: available
+[DEBUG] 20:14:39 : java.nio.Bits.unaligned: true
+[DEBUG] 20:14:39 : Platform: Windows
+[DEBUG] 20:14:39 : Java version: 8
+[DEBUG] 20:14:39 : -Dio.netty.noUnsafe: false
+[DEBUG] 20:14:39 : sun.misc.Unsafe: available
+[DEBUG] 20:14:39 : -Dio.netty.noJavassist: false
+[DEBUG] 20:14:39 : Javassist: unavailable
+[DEBUG] 20:14:39 : You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance.
+[DEBUG] 20:14:39 : -Dio.netty.tmpdir: C:\Users\18910\AppData\Local\Temp (java.io.tmpdir)
+[DEBUG] 20:14:39 : -Dio.netty.bitMode: 64 (sun.arch.data.model)
+[DEBUG] 20:14:39 : -Dio.netty.noPreferDirect: false
+[DEBUG] 20:14:39 : -Dio.netty.noKeySetOptimization: false
+[DEBUG] 20:14:39 : -Dio.netty.selectorAutoRebuildThreshold: 512
+[DEBUG] 20:14:40 : -Dio.netty.processId: 8340 (auto-detected)
+[DEBUG] 20:14:40 : -Dio.netty.machineId: 18:31:bf:ff:fe:b9:d9:2d (auto-detected)
+[DEBUG] 20:14:40 : -Dio.netty.initialSeedUniquifier: 0xa7b6d33a231f59c5 (took 12 ms)
+[DEBUG] 20:14:40 : -Dio.netty.allocator.numHeapArenas: 8
+[DEBUG] 20:14:40 : -Dio.netty.allocator.numDirectArenas: 8
+[DEBUG] 20:14:40 : -Dio.netty.allocator.pageSize: 8192
+[DEBUG] 20:14:40 : -Dio.netty.allocator.maxOrder: 11
+[DEBUG] 20:14:40 : -Dio.netty.allocator.chunkSize: 16777216
+[DEBUG] 20:14:40 : -Dio.netty.allocator.tinyCacheSize: 512
+[DEBUG] 20:14:40 : -Dio.netty.allocator.smallCacheSize: 256
+[DEBUG] 20:14:40 : -Dio.netty.allocator.normalCacheSize: 64
+[DEBUG] 20:14:40 : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+[DEBUG] 20:14:40 : -Dio.netty.allocator.cacheTrimInterval: 8192
+[DEBUG] 20:14:40 : -Dio.netty.allocator.type: pooled
+[DEBUG] 20:14:40 : -Dio.netty.threadLocalDirectBufferSize: 65536
+[DEBUG] 20:14:40 : Loopback interface: lo (Software Loopback Interface 1, 127.0.0.1)
+[DEBUG] 20:14:40 : \proc\sys\net\core\somaxconn: 200 (non-existent)
+[INFO] 20:14:40 : TestServer.run() TestServer /127.0.0.1:8080 started!
+[INFO] 20:14:40 : TestServer.run() TestServer /127.0.0.1:8081 started!
+[INFO] 20:14:40 : TestServerClientHandler.channelRegistered() this channel is[id: 0x98ba3454]
+[INFO] 20:14:40 : TestServerClientHandler.channelRegistered() this channel is[id: 0x766d642c]
+[INFO] 20:14:40 : TestServerClient.syncAddServer connected[id: 0x98ba3454, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:40 : TestServerClient.run: connected: [id: 0x98ba3454, /127.0.0.1:9766 => /127.0.0.1:8080], add to channelMap
+[INFO] 20:14:40 : TestServerClient.syncAddServer connected[id: 0x766d642c, /127.0.0.1:9767 => /127.0.0.1:8080]
+[INFO] 20:14:40 : TestServerClient.run: connected: [id: 0x766d642c, /127.0.0.1:9767 => /127.0.0.1:8080], add to channelMap
+[INFO] 20:14:40 : TestServerHandler.channelRegistered() this channel is[id: 0x264b2820, /127.0.0.1:9767 => /127.0.0.1:8080]
+[INFO] 20:14:40 : TestServerHandler.channelRegistered() this channel is[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:40 : TestServerClientHandler.channelRegistered() this channel is[id: 0x50725f6f]
+[INFO] 20:14:40 : TestServerClientHandler.channelRegistered() this channel is[id: 0x67ba9477]
+[INFO] 20:14:40 : TestServerClient.syncAddServer connected[id: 0x50725f6f, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:40 : TestServerClient.run: connected: [id: 0x50725f6f, /127.0.0.1:9768 => /127.0.0.1:8081], add to channelMap
+[INFO] 20:14:40 : TestServerClient.run: servers connection complete!
+[INFO] 20:14:40 : TestServerClient.syncAddServer connected[id: 0x67ba9477, /127.0.0.1:9769 => /127.0.0.1:8081]
+[INFO] 20:14:40 : TestServerClient.run: connected: [id: 0x67ba9477, /127.0.0.1:9769 => /127.0.0.1:8081], add to channelMap
+[INFO] 20:14:40 : TestServerClient.run: servers connection complete!
+[INFO] 20:14:40 : TestServerHandler.channelRegistered() this channel is[id: 0x80236f07, /127.0.0.1:9769 => /127.0.0.1:8081]
+[INFO] 20:14:40 : TestServerHandler.channelRegistered() this channel is[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[DEBUG] 20:14:43 : -Dio.netty.recycler.maxCapacity: 262144
+[DEBUG] 20:14:43 : -Dio.netty.leakDetectionLevel: simple
+[INFO] 20:14:43 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:43 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:46 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:46 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:49 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:49 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:52 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:52 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:55 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:55 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:14:58 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:14:58 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:15:01 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:15:01 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:15:04 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:15:04 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]
+[INFO] 20:15:07 : TestServerHandler.channelRead() receive msgID: 1
+length: 233
+name: "Hello"
+from[id: 0x04dd8776, /127.0.0.1:9768 => /127.0.0.1:8081]
+[INFO] 20:15:07 : TestServerHandler.channelRead() receive length: 233
+name: "Hello"
+from[id: 0x5ff1d248, /127.0.0.1:9766 => /127.0.0.1:8080]

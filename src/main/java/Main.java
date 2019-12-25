@@ -18,19 +18,15 @@ public class Main {
 
         Log.init();
         if(local == null){
-            TestServer testServer8080 = new TestServer("127.0.0.1",8080);
-            TestServer testServer8081 = new TestServer("127.0.0.1",8081);
-            testServer8080.client.asyncAddServer(1,testServer8081.inetSocketAddress);
-            testServer8080.client.writeMsg(1,"connect to 8081");
+            TestServer testServer8080 = new TestServer(0,8080);
+            TestServer testServer8081 = new TestServer(1,8081);
+            //testServer8080.client.writeMsg(1,"connect to 8081");
         }
-        while(true){
-            try{
-                Thread.sleep(3000);
-            }catch (Exception e){
-
-            }
-
+        else{
+            TestServer testServer = new TestServer(0,local);
         }
+
+
 
 
     }

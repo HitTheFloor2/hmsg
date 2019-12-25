@@ -15,31 +15,35 @@ import protobuf.SimpleStringMessageProto;
 import java.net.InetSocketAddress;
 
 public class TestServer implements Runnable {
+    public int id;
     public int port;
     public InetSocketAddress inetSocketAddress;
     public ServerBootstrap ssmpServerBootstrap;
     public Channel channel;
     public TestServerClient client;
 
-    public TestServer(InetSocketAddress inetSocketAddress){
+    public TestServer(int id,InetSocketAddress inetSocketAddress){
+        this.id = id;
         this.inetSocketAddress = inetSocketAddress;
         this.port = this.inetSocketAddress.getPort();
-        this.client = new TestServerClient();
-        init();
+        init(this);
+        this.client = new TestServerClient(this);
     }
-    public TestServer(String ip,int port){
+    public TestServer(int id,String ip,int port){
+        this.id = id;
         this.port = port;
         this.inetSocketAddress = new InetSocketAddress(ip,this.port);
-        this.client = new TestServerClient();
-        init();
+        init(this);
+        this.client = new TestServerClient(this);
     }
-    public TestServer(int port){
+    public TestServer(int id,int port){
+        this.id = id;
         this.port = port;
         this.inetSocketAddress = new InetSocketAddress("127.0.0.1",this.port);
-        this.client = new TestServerClient();
-        init();
+        init(this);
+        this.client = new TestServerClient(this);
     }
-    public void init(){
+    public void init(TestServer testServer){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
@@ -56,7 +60,7 @@ public class TestServer implements Runnable {
                                             SimpleStringMessageProto.SimpleStringMessage.getDefaultInstance()));
                             socketChannel.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                             socketChannel.pipeline().addLast(new ProtobufEncoder());
-                            socketChannel.pipeline().addLast(new TestServerHandler());
+                            socketChannel.pipeline().addLast(new TestServerHandler(testServer));
 
                         }
                     });
