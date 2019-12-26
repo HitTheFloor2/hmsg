@@ -17,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Properties;
@@ -27,6 +29,7 @@ public class TestServerClient implements Runnable{
     public ConcurrentHashMap<Integer, InetSocketAddress> serverMap = new ConcurrentHashMap<Integer, InetSocketAddress>();
     public ConcurrentHashMap<Integer, Channel> channelMap;
     public Bootstrap bootstrap;
+    public int startPort = 30000;
     public TestServerClient(TestServer testServer){
         this.testServer = testServer;
         this.channelMap = new ConcurrentHashMap<Integer, Channel>();
@@ -38,29 +41,38 @@ public class TestServerClient implements Runnable{
         this.channelMap = new ConcurrentHashMap<Integer, Channel>();
         init(this);
         new Thread(this).start();
+
     }
 
-    public Channel syncAddServer(int id, InetSocketAddress inetSocketAddress){
+
+    public void syncAddServer(int id, InetSocketAddress inetSocketAddress){
+        InetSocketAddress local = new InetSocketAddress(this.testServer.inetSocketAddress.getHostString(),startPort+id);
         try{
-            ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress).sync();
+            //ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress,local).sync();
+            ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
             Log.logger.info("TestServerClient.syncAddServer connected "+channelFuture.channel().toString());
-            return channelFuture.channel();
+            this.channelMap.put(new Integer(id),channelFuture.channel());
+            return ;
         }catch (Exception e){
             e.printStackTrace();
-            return null;
+            return ;
         }
 
     }
     public void asyncAddServer(int id, InetSocketAddress inetSocketAddress){
         final int fid = id;
+        //InetSocketAddress local = new InetSocketAddress(this.testServer.inetSocketAddress.getHostString(),startPort+id);
 
         ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
 
         channelFuture.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                channelMap.put(new Integer(fid),channelFuture.channel());
-                Log.logger.info("TestServerClient.addServer connected:"+channelFuture.channel().toString());
+                if(channelFuture.channel().isActive()){
+                    channelMap.put(new Integer(fid),channelFuture.channel());
+                    Log.logger.info("TestServerClient.addServer connected:"+channelFuture.channel().toString());
+                }
+
                 //channelFuture.channel().closeFuture();
             }
 
@@ -117,8 +129,12 @@ public class TestServerClient implements Runnable{
     }
 
     public void run(){
-        Log.logger.info("TestServerClient.run: servers connection complete!");
+
+        Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: servers connection complete!");
         while(true){
+            Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
+            Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: channelMap = "+this.channelMap.toString());
+
             try{
                 Thread.sleep(3000);
                 broadcasting();
@@ -131,20 +147,24 @@ public class TestServerClient implements Runnable{
     public void writeMsg(int serverid,String content){
         int i = serverid;
         if(!channelMap.keySet().contains(serverid)){
-            System.out.println("No server id = "+serverid);
+            //System.out.println("No server id = "+serverid);
             return;
         }
         try{
             Channel channel = channelMap.get(new Integer(i));
-
+            if(!channel.isOpen()){
+                Log.logger.info("server["+this.testServer.id+"]" + "writeMsg: channel to "+this.serverMap.get(i).toString()+" is not open!");
+                return;
+            }
             SimpleStringMessageProto.SimpleStringMessage.Builder builder =
                     SimpleStringMessageProto.SimpleStringMessage.newBuilder();
-            builder.setMsgID(i);
+            builder.setMsgID(this.testServer.id);
             builder.setLength(233);
             builder.setName(content);
             SimpleStringMessageProto.SimpleStringMessage demo = builder.build();
             channel.writeAndFlush(demo).sync();
         }catch (Exception e){
+            Log.logger.warn("server["+this.testServer.id+"]" + "writeMsg:error to write message!");
             e.printStackTrace();
         }
 

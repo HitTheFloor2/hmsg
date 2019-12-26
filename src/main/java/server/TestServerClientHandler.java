@@ -21,8 +21,8 @@ public class TestServerClientHandler  extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         SimpleStringMessageProto.SimpleStringMessage simpleStringMessage =
                 (SimpleStringMessageProto.SimpleStringMessage) msg;
-        Log.logger.info("TestServerClientHandler.channelRead() receive "+simpleStringMessage.toString()+
-                " from "+ctx.channel().toString());
+        Log.logger.info("server["+this.testServerClient.testServer.id+"]" +
+                "TestServerHandler.channelRead() receive msg :\n"+simpleStringMessage.toString());
 
     }
 }
