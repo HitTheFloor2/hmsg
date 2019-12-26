@@ -14,7 +14,7 @@ public class TestServerClientHandler  extends ChannelHandlerAdapter {
     }
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        Log.logger.info("TestServerClientHandler.channelRegistered() this channel is"+ctx.channel().toString());
+        Log.logger.info("TestServerClientHandler.channelRegistered() this channel is "+ctx.channel().toString());
     }
 
     @Override

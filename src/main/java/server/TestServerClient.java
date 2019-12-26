@@ -43,7 +43,7 @@ public class TestServerClient implements Runnable{
     public Channel syncAddServer(int id, InetSocketAddress inetSocketAddress){
         try{
             ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress).sync();
-            Log.logger.info("TestServerClient.syncAddServer connected"+channelFuture.channel().toString());
+            Log.logger.info("TestServerClient.syncAddServer connected "+channelFuture.channel().toString());
             return channelFuture.channel();
         }catch (Exception e){
             e.printStackTrace();
@@ -53,6 +53,7 @@ public class TestServerClient implements Runnable{
     }
     public void asyncAddServer(int id, InetSocketAddress inetSocketAddress){
         final int fid = id;
+
         ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
 
         channelFuture.addListener(new ChannelFutureListener() {
@@ -60,7 +61,7 @@ public class TestServerClient implements Runnable{
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 channelMap.put(new Integer(fid),channelFuture.channel());
                 Log.logger.info("TestServerClient.addServer connected:"+channelFuture.channel().toString());
-                channelFuture.channel().closeFuture();
+                //channelFuture.channel().closeFuture();
             }
 
         });
@@ -79,8 +80,8 @@ public class TestServerClient implements Runnable{
                             socketChannel.pipeline().addLast(new ProtobufVarint32FrameDecoder());
                             socketChannel.pipeline().
                                     addLast(new ProtobufDecoder(
-                                            //SimpleStringMessageProto.SimpleStringMessage.getDefaultInstance()));
-                                            JavaObjProto.JavaObj.getDefaultInstance()));
+                                            SimpleStringMessageProto.SimpleStringMessage.getDefaultInstance()));
+                                            //JavaObjProto.JavaObj.getDefaultInstance()));
                             socketChannel.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                             socketChannel.pipeline().addLast(new ProtobufEncoder());
                             socketChannel.pipeline().addLast(new TestServerClientHandler(testServerClient));
@@ -101,6 +102,13 @@ public class TestServerClient implements Runnable{
                 String[] vs = value.split(":");
                 serverMap.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
             }
+            //按照serverMap中的记录，建立连接
+            for(Integer serverid : serverMap.keySet()){
+                if(serverid == this.testServer.id){
+                    continue;
+                }
+                asyncAddServer(serverid,this.serverMap.get(serverid));
+            }
             //System.out.println(prop.getProperty("dbpassword"));
         } catch(IOException e) {
             e.printStackTrace();
@@ -109,14 +117,6 @@ public class TestServerClient implements Runnable{
     }
 
     public void run(){
-        //将serverMap中记录的server尝试连接，初始化channelMap
-        for(Integer serverid : serverMap.keySet()){
-            Channel channel = syncAddServer(serverid,this.serverMap.get(serverid));
-            if(channel != null){
-                this.channelMap.put(serverid,channel);
-                Log.logger.info("TestServerClient.run: connected: "+channel.toString()+", add to channelMap");
-            }
-        }
         Log.logger.info("TestServerClient.run: servers connection complete!");
         while(true){
             try{
@@ -160,11 +160,8 @@ public class TestServerClient implements Runnable{
      * */
     public void broadcasting(){
         for(Integer i : this.channelMap.keySet()){
-            if(i == this.testServer.id){
-                continue;
-            }
             if(this.channelMap.get(i).isRegistered()){
-                writeMsg(i);
+                writeMsg(i,"broadcasting");
             }
         }
     }
