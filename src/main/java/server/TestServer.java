@@ -36,13 +36,6 @@ public class TestServer implements Runnable {
         init(this);
         this.client = new TestServerClient(this);
     }
-    public TestServer(int id,int port){
-        this.id = id;
-        this.port = port;
-        this.inetSocketAddress = new InetSocketAddress("127.0.0.1",this.port);
-        init(this);
-        this.client = new TestServerClient(this);
-    }
     public void init(TestServer testServer){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();

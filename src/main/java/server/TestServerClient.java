@@ -10,6 +10,7 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import log.Log;
+import manager.ConfigManager;
 import protobuf.JavaObjProto;
 import protobuf.SimpleStringMessageProto;
 
@@ -103,26 +104,18 @@ public class TestServerClient implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         //遍历servers.properties文件，初始化serverMap，记录其余的server的host
+        //深拷贝ConfigManager中的serverMap，因为Client端的serverMap可变
+        this.serverMap.putAll(ConfigManager.serverMap);
         try {
-            String path = System.getProperty("user.dir");
-            Properties prop = new Properties();
-            prop.load(new FileInputStream(path+"/config/servers.properties"));
-            for(String key: prop.stringPropertyNames()){
-                String value = prop.getProperty(key);
-                String[] vs = value.split(":");
-                serverMap.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
-            }
             //按照serverMap中的记录，建立连接
-            for(Integer serverid : serverMap.keySet()){
+            for(Integer serverid : this.serverMap.keySet()){
                 if(serverid == this.testServer.id){
                     continue;
                 }
                 asyncAddServer(serverid,this.serverMap.get(serverid));
             }
-            //System.out.println(prop.getProperty("dbpassword"));
-        } catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
