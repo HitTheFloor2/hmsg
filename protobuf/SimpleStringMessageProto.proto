@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_outer_classname = "SimpleStringMessageProto";
+
+message SimpleStringMessage {
+    int32 msgID = 1;
+    int32 length = 2;
+    string name = 3;
+   
+}
+

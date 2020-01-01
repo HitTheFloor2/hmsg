@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_outer_classname = "JavaObjProto";
+
+message JavaObj {
+    
+    string name = 1;
+
+    bytes data = 2;
+   
+}
