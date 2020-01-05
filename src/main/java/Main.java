@@ -12,19 +12,22 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String args[]){
-        boolean debug = false;
+
         int serverid = 0;
         Log.init();
         Log.logger.info("Main() Log init completed!");
         InetSocketAddress local = null;
 
         ConfigManager.init();
+        ConfigManager.setDebug(true);
 
 
 
-        if(debug){
-            TestServer testServer8080 = new TestServer(1,"192.168.0.100",8080);
-            TestServer testServer8081 = new TestServer(2,"192.168.0.100",8081);
+        if(ConfigManager.debug){
+            TestServer testServer8080 = new TestServer(1,"127.0.0.1",8080);
+            TestServer testServer8081 = new TestServer(2,"127.0.0.1",8081);
+            TestServer testServer8082 = new TestServer(3,"127.0.0.1",8082);
+            TestServer testServer8083 = new TestServer(4,"127.0.0.1",8083);
         }
         else{
             //1 192.168.0.100 8080

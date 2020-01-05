@@ -14,13 +14,20 @@ public class ConfigManager {
     public static String path = System.getProperty("user.dir");
     public static Properties properties = new Properties();
 
+
+    public static boolean debug = false;
     public static Integer serverid = -1;
     public static InetSocketAddress local = null;
     public static HashMap<String,Object> propertiesMap = new HashMap<>();
     public static HashMap<Integer,InetSocketAddress> serverMap = new HashMap<>();
+    //测试用，读取的是不同的config
+    public static HashMap<Integer,InetSocketAddress> serverMapTest = new HashMap<>();
 
     public static void setServerid(int id){
         serverid = id;
+    }
+    public static void setDebug(boolean d){
+        debug = d;
     }
     public static void setLocal(String ip,int port){
         local = new InetSocketAddress(ip,port);
@@ -32,6 +39,9 @@ public class ConfigManager {
         Log.logger.info("ConfigManager.init complete: localhost="+local.toString()+" serverid="+serverid+" serverMap="+
                 serverMap.toString());
     }
+    /**
+     * read config.properties
+     * */
     public static void initConfig(){
         try{
             properties.load(new FileInputStream(path+"/config/config.properties"));
@@ -46,6 +56,10 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * read servers.properties and fill serverMap
+     * */
     public static void initServers(){
         try{
             String path = System.getProperty("user.dir");
@@ -56,6 +70,15 @@ public class ConfigManager {
                 String[] vs = value.split(":");
                 serverMap.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
             }
+
+            prop = new Properties();
+            prop.load(new FileInputStream(path+"/config/servers_test.properties"));
+            for(String key: prop.stringPropertyNames()){
+                String value = prop.getProperty(key);
+                String[] vs = value.split(":");
+                serverMapTest.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
+            }
+
             //Log.logger.info("ConfigManager.initServers: init serverMap completed.");
         }catch (Exception e){
             e.printStackTrace();

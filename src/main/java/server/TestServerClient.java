@@ -1,5 +1,6 @@
 package server;
 
+import correspond.WriteMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,24 +31,28 @@ public class TestServerClient implements Runnable{
     public ConcurrentHashMap<Integer, InetSocketAddress> serverMap = new ConcurrentHashMap<Integer, InetSocketAddress>();
     public ConcurrentHashMap<Integer, Channel> channelMap;
     public Bootstrap bootstrap;
-    public int startPort = 30000;
+
+
     public TestServerClient(TestServer testServer){
         this.testServer = testServer;
         this.channelMap = new ConcurrentHashMap<Integer, Channel>();
         init(this);
+
         new Thread(this).start();
     }
-    public TestServerClient(TestServer testServer,boolean useConfig){
-        this.testServer = testServer;
-        this.channelMap = new ConcurrentHashMap<Integer, Channel>();
-        init(this);
-        new Thread(this).start();
 
+    public void init(TestServerClient testServerClient){
+        initClient(testServerClient);
+        initServerMap(testServerClient);
     }
 
 
+    /**
+     * 同步添加Server
+     * 在不可控的网络状态下，如果连接消耗时间长，会在此阻塞
+     * */
     public void syncAddServer(int id, InetSocketAddress inetSocketAddress){
-        InetSocketAddress local = new InetSocketAddress(this.testServer.inetSocketAddress.getHostString(),startPort+id);
+        InetSocketAddress local = this.testServer.inetSocketAddress;
         try{
             //ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress,local).sync();
             ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
@@ -60,12 +65,13 @@ public class TestServerClient implements Runnable{
         }
 
     }
+
+    /**
+     * 异步添加Server
+     * */
     public void asyncAddServer(int id, InetSocketAddress inetSocketAddress){
         final int fid = id;
-        //InetSocketAddress local = new InetSocketAddress(this.testServer.inetSocketAddress.getHostString(),startPort+id);
-
         ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
-
         channelFuture.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
@@ -81,7 +87,31 @@ public class TestServerClient implements Runnable{
 
     }
 
-    public void init(TestServerClient testServerClient) {
+    public void initServerMap(TestServerClient testServerClient){
+        //遍历servers.properties文件，初始化serverMap，记录其余的server的host
+        //深拷贝ConfigManager中的serverMap，因为Client端的serverMap可变
+
+        if(ConfigManager.debug) {
+            testServerClient.serverMap.putAll(ConfigManager.serverMapTest);
+        }
+        else{
+            testServerClient.serverMap.putAll(ConfigManager.serverMap);
+        }
+
+        try {
+            //按照serverMap中的记录，建立连接
+            for(Integer serverid : this.serverMap.keySet()){
+                if(serverid == this.testServer.id){
+                    continue;
+                }
+                asyncAddServer(serverid,this.serverMap.get(serverid));
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initClient(TestServerClient testServerClient) {
         //init Netty client
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -104,20 +134,7 @@ public class TestServerClient implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //遍历servers.properties文件，初始化serverMap，记录其余的server的host
-        //深拷贝ConfigManager中的serverMap，因为Client端的serverMap可变
-        this.serverMap.putAll(ConfigManager.serverMap);
-        try {
-            //按照serverMap中的记录，建立连接
-            for(Integer serverid : this.serverMap.keySet()){
-                if(serverid == this.testServer.id){
-                    continue;
-                }
-                asyncAddServer(serverid,this.serverMap.get(serverid));
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+
 
     }
 
@@ -125,58 +142,23 @@ public class TestServerClient implements Runnable{
 
         Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: servers connection complete!");
         while(true){
-            Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
-            Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: channelMap = "+this.channelMap.toString());
+            //Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
+            //Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: channelMap = "+this.channelMap.toString());
 
             try{
                 Thread.sleep(3000);
-                broadcasting();
+                //WriteMsg.broadcasting(this.testServer,0,"broadcasting");
+                if(testServer.id == 2){
+                    Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
+                    WriteMsg.simpleVote(testServer);
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
     }
 
-    public void writeMsg(int serverid,String content){
-        int i = serverid;
-        if(!channelMap.keySet().contains(serverid)){
-            //System.out.println("No server id = "+serverid);
-            return;
-        }
-        try{
-            Channel channel = channelMap.get(new Integer(i));
-            if(!channel.isOpen()){
-                Log.logger.info("server["+this.testServer.id+"]" + "writeMsg: channel to "+this.serverMap.get(i).toString()+" is not open!");
-                return;
-            }
-            SimpleStringMessageProto.SimpleStringMessage.Builder builder =
-                    SimpleStringMessageProto.SimpleStringMessage.newBuilder();
-            builder.setMsgID(this.testServer.id);
-            builder.setLength(233);
-            builder.setName(content);
-            SimpleStringMessageProto.SimpleStringMessage demo = builder.build();
-            channel.writeAndFlush(demo).sync();
-        }catch (Exception e){
-            Log.logger.warn("server["+this.testServer.id+"]" + "writeMsg:error to write message!");
-            e.printStackTrace();
-        }
 
-    }
-    /**
-     * default writeMsg
-     * */
-    public void writeMsg(int serverid){
-        writeMsg(serverid,"Hello");
-    }
-    /**
-     *
-     * */
-    public void broadcasting(){
-        for(Integer i : this.channelMap.keySet()){
-            if(this.channelMap.get(i).isRegistered()){
-                writeMsg(i,"broadcasting");
-            }
-        }
-    }
+
 
 }
