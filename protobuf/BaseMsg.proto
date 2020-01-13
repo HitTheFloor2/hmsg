@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_outer_classname = "BaseMsgProto";
+
+message BaseMsg {
+    int32 serverid = 1;
+    int32 aimid = 2;
+    int32 msgid = 3;
+    string content = 4;
+   
+}
+
