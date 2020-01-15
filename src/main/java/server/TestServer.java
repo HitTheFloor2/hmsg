@@ -10,33 +10,39 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import log.Log;
-import protobuf.SimpleStringMessageProto;
+import protobuf.BaseMsgProto;
+import manager.MessageManager;
 
 import java.net.InetSocketAddress;
 
-public class TestServer implements Runnable {
+public class TestServer {
     public int id;
     public int port;
     public InetSocketAddress inetSocketAddress;
     public ServerBootstrap ssmpServerBootstrap;
     public Channel channel;
     public TestServerClient client;
-
+    public MessageManager messageManager;
     public TestServer(int id,InetSocketAddress inetSocketAddress){
         this.id = id;
         this.inetSocketAddress = inetSocketAddress;
         this.port = this.inetSocketAddress.getPort();
-        init(this);
-        this.client = new TestServerClient(this);
+        init();
+
     }
     public TestServer(int id,String ip,int port){
         this.id = id;
         this.port = port;
         this.inetSocketAddress = new InetSocketAddress(ip,this.port);
-        init(this);
-        this.client = new TestServerClient(this);
+        init();
+
     }
-    public void init(TestServer testServer){
+    public void init(){
+        initNettyServer(this);
+        this.client = new TestServerClient(this);
+        this.messageManager = new MessageManager(this);
+    }
+    public void initNettyServer(TestServer testServer){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
@@ -50,7 +56,7 @@ public class TestServer implements Runnable {
                             socketChannel.pipeline().addLast(new ProtobufVarint32FrameDecoder());
                             socketChannel.pipeline().
                                     addLast(new ProtobufDecoder(
-                                            SimpleStringMessageProto.SimpleStringMessage.getDefaultInstance()));
+                                            BaseMsgProto.BaseMsg.getDefaultInstance()));
                             socketChannel.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                             socketChannel.pipeline().addLast(new ProtobufEncoder());
                             socketChannel.pipeline().addLast(new TestServerHandler(testServer));
@@ -67,14 +73,6 @@ public class TestServer implements Runnable {
     }
 
 
-    public void run(){
-        try{
-            ChannelFuture channelFuture = ssmpServerBootstrap.bind(port).sync();
-            Log.logger.info("TestServer.run() TestServer "+this.inetSocketAddress.toString()+" started!");
-            channelFuture.channel().closeFuture().sync();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+
 
 }

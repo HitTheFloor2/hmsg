@@ -79,7 +79,7 @@ public class ConfigManager {
                 serverMapTest.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
             }
 
-            //Log.logger.info("ConfigManager.initServers: init serverMap completed.");
+            Log.logger.info("ConfigManager.initServers: init serverMap completed.");
         }catch (Exception e){
             e.printStackTrace();
         }

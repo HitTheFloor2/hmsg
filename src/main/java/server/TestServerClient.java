@@ -1,6 +1,5 @@
 package server;
 
-import correspond.WriteMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,19 +10,10 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import log.Log;
+import protobuf.BaseMsgProto;
 import manager.ConfigManager;
-import protobuf.JavaObjProto;
-import protobuf.SimpleStringMessageProto;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.SocketAddress;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TestServerClient implements Runnable{
@@ -42,7 +32,7 @@ public class TestServerClient implements Runnable{
     }
 
     public void init(TestServerClient testServerClient){
-        initClient(testServerClient);
+        initClient(this.testServer);
         initServerMap(testServerClient);
     }
 
@@ -77,10 +67,8 @@ public class TestServerClient implements Runnable{
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 if(channelFuture.channel().isActive()){
                     channelMap.put(new Integer(fid),channelFuture.channel());
-                    Log.logger.info("TestServerClient.addServer connected:"+channelFuture.channel().toString());
+                    Log.logger.info(channelFuture.channel().toString()+" channel isActive!");
                 }
-
-                //channelFuture.channel().closeFuture();
             }
 
         });
@@ -111,7 +99,7 @@ public class TestServerClient implements Runnable{
         }
     }
 
-    public void initClient(TestServerClient testServerClient) {
+    public void initClient(TestServer testServer) {
         //init Netty client
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -123,11 +111,11 @@ public class TestServerClient implements Runnable{
                             socketChannel.pipeline().addLast(new ProtobufVarint32FrameDecoder());
                             socketChannel.pipeline().
                                     addLast(new ProtobufDecoder(
-                                            SimpleStringMessageProto.SimpleStringMessage.getDefaultInstance()));
+                                            BaseMsgProto.BaseMsg.getDefaultInstance()));
                                             //JavaObjProto.JavaObj.getDefaultInstance()));
                             socketChannel.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                             socketChannel.pipeline().addLast(new ProtobufEncoder());
-                            socketChannel.pipeline().addLast(new TestServerClientHandler(testServerClient));
+                            socketChannel.pipeline().addLast(new TestServerClientHandler(testServer));
 
                         }
                     });
@@ -139,19 +127,21 @@ public class TestServerClient implements Runnable{
     }
 
     public void run(){
-
-        Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: servers connection complete!");
+        Log.info(this.testServer.id,"servers connection completed!");
         while(true){
-            //Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
-            //Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: channelMap = "+this.channelMap.toString());
-
+            Log.info(this.testServer.id,"client alive, channelMap = "+this.channelMap.toString());
             try{
                 Thread.sleep(3000);
-                //WriteMsg.broadcasting(this.testServer,0,"broadcasting");
-                if(testServer.id == 2){
-                    Log.logger.info("server["+this.testServer.id+"]" + "TestServerClient.run: keepAlive...");
-                    WriteMsg.simpleVote(testServer);
-                }
+                BaseMsgProto.BaseMsg.Builder builder =
+                        BaseMsgProto.BaseMsg.newBuilder();
+                builder.setServerid(this.testServer.id);
+                builder.setAimid(-1);
+                builder.setMsgid(0);
+                builder.setContent("echo");
+                BaseMsgProto.BaseMsg msg =
+                        builder.build();
+                this.testServer.messageManager.sendMsg(builder.getAimid(),msg);
+
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -26,8 +26,8 @@ public class Main {
         if(ConfigManager.debug){
             TestServer testServer8080 = new TestServer(1,"127.0.0.1",8080);
             TestServer testServer8081 = new TestServer(2,"127.0.0.1",8081);
-            TestServer testServer8082 = new TestServer(3,"127.0.0.1",8082);
-            TestServer testServer8083 = new TestServer(4,"127.0.0.1",8083);
+            //TestServer testServer8082 = new TestServer(3,"127.0.0.1",8082);
+            //TestServer testServer8083 = new TestServer(4,"127.0.0.1",8083);
         }
         else{
             //1 192.168.0.100 8080

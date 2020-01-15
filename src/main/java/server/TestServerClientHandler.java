@@ -1,28 +1,24 @@
 package server;
 
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import log.Log;
-import protobuf.SimpleStringMessageProto;
+import protobuf.BaseMsgProto;
 
-public class TestServerClientHandler  extends ChannelHandlerAdapter {
-    public TestServerClient testServerClient;
+public class TestServerClientHandler extends ChannelHandlerAdapter {
+    public TestServer testServer;
 
-    public TestServerClientHandler(TestServerClient testServerClient){
-        this.testServerClient = testServerClient;
+    public TestServerClientHandler(TestServer testServer){
+        this.testServer = testServer;
     }
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        Log.logger.info("TestServerClientHandler.channelRegistered() this channel is "+ctx.channel().toString());
+        //Log.logger.info("TestServerClientHandler.channelRegistered() this channel is "+ctx.channel().toString());
+        Log.info(testServer.id,"channelRegistered "+ctx.channel().toString());
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        SimpleStringMessageProto.SimpleStringMessage simpleStringMessage =
-                (SimpleStringMessageProto.SimpleStringMessage) msg;
-        Log.logger.info("server["+this.testServerClient.testServer.id+"]" +
-                "TestServerHandler.channelRead() receive msg :\n"+simpleStringMessage.toString());
-
+        testServer.messageManager.receiveMsg(msg);
     }
 }

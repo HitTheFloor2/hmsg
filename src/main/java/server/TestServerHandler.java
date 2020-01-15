@@ -1,12 +1,7 @@
 package server;
-import correspond.HandleMsg;
-import correspond.WriteMsg;
 import log.Log;
-import protobuf.*;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.util.HashMap;
 
 public class TestServerHandler extends ChannelHandlerAdapter {
     public TestServer testServer;
@@ -21,14 +16,6 @@ public class TestServerHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        SimpleStringMessageProto.SimpleStringMessage simpleStringMessage =
-                (SimpleStringMessageProto.SimpleStringMessage) msg;
-
-        HandleMsg.handleMsg(simpleStringMessage,testServer);
-
-        Log.logger.info("server["+this.testServer.id+"]" +
-                "TestServerHandler.channelRead() receive msg :\n"+simpleStringMessage.toString());
-
-
+        testServer.messageManager.receiveMsg(msg);
     }
 }
