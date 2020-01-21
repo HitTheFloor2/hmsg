@@ -5,4 +5,7 @@
 2.多线程调用static方法：
     当不存在全局变量时是安全的
 3.实现全局可访问的对象
-    static
+    新建一个类，并且声明一个static的对象，在初始化之后就可以被全局感知到
+4.Netty中Inbound和outbound区别
+    Netty是事件驱动，Inbound表示事件来源于外部（比如一个channel收到了数据包），outbound表示内部自己产生的事件
+    https://wallenwang.com/2019/06/understand-netty-inbound-outbound/

@@ -2,10 +2,11 @@ package server;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import log.Log;
 import protobuf.BaseMsgProto;
 
-public class TestServerClientHandler extends ChannelHandlerAdapter {
+public class TestServerClientHandler extends ChannelInboundHandlerAdapter {
     public TestServer testServer;
 
     public TestServerClientHandler(TestServer testServer){

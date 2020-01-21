@@ -1,9 +1,10 @@
 package server;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import log.Log;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-public class TestServerHandler extends ChannelHandlerAdapter {
+public class TestServerHandler extends ChannelInboundHandlerAdapter {
     public TestServer testServer;
     //public TestServerHandler(){}
     public TestServerHandler(TestServer testServer){
