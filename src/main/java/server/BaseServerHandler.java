@@ -1,14 +1,13 @@
 package server;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import log.Log;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-public class TestServerHandler extends ChannelInboundHandlerAdapter {
-    public TestServer testServer;
+public class BaseServerHandler extends ChannelInboundHandlerAdapter {
+    public BaseServer baseServer;
     //public TestServerHandler(){}
-    public TestServerHandler(TestServer testServer){
-        this.testServer = testServer;
+    public BaseServerHandler(BaseServer baseServer){
+        this.baseServer = baseServer;
     }
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -17,6 +16,6 @@ public class TestServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        testServer.messageManager.receiveMsg(msg);
+        baseServer.messageManager.receiveMsg(msg);
     }
 }

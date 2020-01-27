@@ -15,22 +15,22 @@ import manager.MessageManager;
 
 import java.net.InetSocketAddress;
 
-public class TestServer {
+public class BaseServer {
     public int id;
     public int port;
     public InetSocketAddress inetSocketAddress;
     public ServerBootstrap ssmpServerBootstrap;
     public Channel channel;
-    public TestServerClient client;
+    public BaseServerClient client;
     public MessageManager messageManager;
-    public TestServer(int id,InetSocketAddress inetSocketAddress){
+    public BaseServer(int id, InetSocketAddress inetSocketAddress){
         this.id = id;
         this.inetSocketAddress = inetSocketAddress;
         this.port = this.inetSocketAddress.getPort();
         init();
 
     }
-    public TestServer(int id,String ip,int port){
+    public BaseServer(int id, String ip, int port){
         this.id = id;
         this.port = port;
         this.inetSocketAddress = new InetSocketAddress(ip,this.port);
@@ -39,10 +39,10 @@ public class TestServer {
     }
     public void init(){
         initNettyServer(this);
-        this.client = new TestServerClient(this);
+        this.client = new BaseServerClient(this);
         this.messageManager = new MessageManager(this);
     }
-    public void initNettyServer(TestServer testServer){
+    public void initNettyServer(BaseServer baseServer){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
@@ -59,12 +59,12 @@ public class TestServer {
                                             BaseMsgProto.BaseMsg.getDefaultInstance()));
                             socketChannel.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                             socketChannel.pipeline().addLast(new ProtobufEncoder());
-                            socketChannel.pipeline().addLast(new TestServerHandler(testServer));
+                            socketChannel.pipeline().addLast(new BaseServerHandler(baseServer));
 
                         }
                     });
             ChannelFuture channelFuture = ssmpServerBootstrap.bind(port).sync();
-            Log.logger.info("TestServer.run() TestServer "+this.inetSocketAddress.toString()+" started!");
+            Log.logger.info("BaseServer.run() BaseServer "+this.inetSocketAddress.toString()+" started!");
         } catch (Exception e) {
             e.printStackTrace();
         }

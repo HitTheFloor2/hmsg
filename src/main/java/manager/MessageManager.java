@@ -2,7 +2,7 @@ package manager;
 
 import io.netty.channel.Channel;
 import log.Log;
-import server.TestServer;
+import server.BaseServer;
 import protobuf.BaseMsgProto;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -11,29 +11,16 @@ import java.util.concurrent.CountDownLatch;
  * 接收消息的来源为netty的channel
  * */
 public class MessageManager {
-    public TestServer testServer;
+    public BaseServer baseServer;
 
     public ConcurrentHashMap<Object,CountDownLatch> asyncHelper;
     public static volatile CountDownLatch countDownLatch = null;
 
-    public MessageManager(TestServer testServer){
-        this.testServer = testServer;
+    public MessageManager(BaseServer baseServer){
+        this.baseServer = baseServer;
     }
 
-    public static synchronized void getCountDownLatch(int size){
-        MessageManager.countDownLatch = new CountDownLatch(size);
-    }
-    public static synchronized void dropCountDownLatch(){
-        MessageManager.countDownLatch = null;
-    }
-    public static synchronized void downCountDownLatch(){
-        if(MessageManager.countDownLatch == null){
-            return;
-        }
-        MessageManager.countDownLatch.countDown();
 
-        return;
-    }
     public void sendMsg(int aimid,Object msg){
         if(aimid == -1){
             broadcasting(msg);
@@ -43,18 +30,18 @@ public class MessageManager {
         }
     }
     public void singleSendMsg(int aimid,Object msg){
-        if(!testServer.client.channelMap.keySet().contains(aimid)){
+        if(!baseServer.client.channelMap.keySet().contains(aimid)){
             return;
         }
         try{
-            Channel channel = testServer.client.channelMap.get(aimid);
+            Channel channel = baseServer.client.channelMap.get(aimid);
             channel.writeAndFlush(msg);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
     public void broadcasting(Object msg){
-        for(Channel channel : testServer.client.channelMap.values()){
+        for(Channel channel : baseServer.client.channelMap.values()){
             channel.writeAndFlush(msg);
         }
     }
@@ -67,18 +54,18 @@ public class MessageManager {
     public void receiveMsg(Object msg){
         BaseMsgProto.BaseMsg baseMsg = (BaseMsgProto.BaseMsg) msg;
         int msgid = baseMsg.getMsgid();
-        Log.info(testServer.id ,"MessageManager.receiveMsg "+baseMsg.toString());
+        Log.info(baseServer.id ,"MessageManager.receiveMsg "+baseMsg.toString());
         if(msgid == 0){
             //echo
             BaseMsgProto.BaseMsg.Builder builder =
                     BaseMsgProto.BaseMsg.newBuilder();
-            builder.setServerid(testServer.id);
-
+            builder.setServerid(baseServer.id);
+            builder.setAimid(baseMsg.getServerid());
             builder.setMsgid(1);
             builder.setContent("echo reply");
             BaseMsgProto.BaseMsg replyMsg =
                     builder.build();
-            sendMsg(testServer.id,replyMsg);
+            sendMsg(baseMsg.getServerid(),replyMsg);
         }
     }
     public void sendMsg(){
