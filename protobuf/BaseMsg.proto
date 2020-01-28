@@ -3,10 +3,16 @@ syntax = "proto3";
 option java_outer_classname = "BaseMsgProto";
 
 message BaseMsg {
-    int32 serverid = 1;
-    int32 aimid = 2;
-    int32 msgid = 3;
-    string content = 4;
-   
+    int32 msg_type = 1;
+    int32 msg_id = 2;
+    int32 reply_msg_id = 3;
+    int32 sender_id = 4;
+    int32 single_receiver_id = 5;
+    repeated int32 multi_receiver_id = 6;
+    int32 single_reply_id = 7;
+    repeated int32 multi_reply_id = 8;
+    int64 timeout = 9;
+    int64 timestamp = 10;
+    string content = 11;
 }
 

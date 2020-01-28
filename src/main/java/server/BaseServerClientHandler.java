@@ -10,10 +10,11 @@ public class BaseServerClientHandler extends ChannelInboundHandlerAdapter {
     public BaseServerClientHandler(BaseServer baseServer){
         this.baseServer = baseServer;
     }
+
     @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        //Log.logger.info("TestServerClientHandler.channelRegistered() this channel is "+ctx.channel().toString());
-        Log.info(baseServer.id,"channelRegistered "+ctx.channel().toString());
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        //删除对应的Channel，由于只有BaseServerClient端保存channelMap，所以只需要此处删除即可
+        baseServer.client.removeChannel(ctx.channel());
     }
 
     @Override

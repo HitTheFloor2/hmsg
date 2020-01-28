@@ -11,7 +11,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import log.Log;
 import protobuf.BaseMsgProto;
-import manager.MessageManager;
+import message.MessageManager;
 
 import java.net.InetSocketAddress;
 

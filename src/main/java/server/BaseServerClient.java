@@ -9,16 +9,23 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
 import log.Log;
+import message.BaseMsgUtil;
 import protobuf.BaseMsgProto;
 import manager.ConfigManager;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * BaseServerClient作为BaseServer的成员对象，用于和其他集群中的Server建立Channel
+ * 并且负责断线重连，心跳
+ * */
 public class BaseServerClient implements Runnable{
     public BaseServer baseServer;
+    //集群服务器地址
     public ConcurrentHashMap<Integer, InetSocketAddress> serverMap = new ConcurrentHashMap<Integer, InetSocketAddress>();
+    //集群服务器可用Channel
     public ConcurrentHashMap<Integer, Channel> channelMap;
     public Bootstrap bootstrap;
 
@@ -32,7 +39,7 @@ public class BaseServerClient implements Runnable{
     }
 
     public void init(BaseServerClient baseServerClient){
-        initClient(this.baseServer);
+        initNettyClient(this.baseServer);
         initServerMap(baseServerClient);
     }
 
@@ -57,24 +64,43 @@ public class BaseServerClient implements Runnable{
     }
 
     /**
-     * 异步添加Server
+     * 异步添加Server，只有连接成功的channel被放入channelMap
      * */
     public void asyncAddServer(int id, InetSocketAddress inetSocketAddress){
+        if(channelMap.keySet().contains(id)){
+            if(channelMap.get(id).isActive()) {
+                return;
+            }
+        }
         final int fid = id;
         ChannelFuture channelFuture = bootstrap.connect(inetSocketAddress);
         channelFuture.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                if(channelFuture.channel().isActive()){
+                if(channelFuture.isSuccess()){
                     channelMap.put(new Integer(fid),channelFuture.channel());
-                    Log.logger.info(channelFuture.channel().toString()+" channel isActive!");
+                    Log.info(baseServer.id,channelFuture.channel().toString()+" channel connected!");
+                }else{
+                    Log.info(baseServer.id,channelFuture.channel().toString()+
+                            " channel connect failed!");
                 }
             }
-
         });
-
     }
 
+    /**
+     * 删除Inactive的Channel
+     * */
+    public void removeChannel(Channel channel){
+        if(baseServer.client.channelMap.values().contains(channel)){
+            baseServer.client.channelMap.remove(channel);
+            Log.info(baseServer.id,"BaseServerClientHandler: channel "+channel.toString()+
+                    " is inactive, remove it!");
+        }
+    }
+    /**
+     * 从配置文件中初始化ServerMap
+     * */
     public void initServerMap(BaseServerClient baseServerClient){
         //遍历servers.properties文件，初始化serverMap，记录其余的server的host
         //深拷贝ConfigManager中的serverMap，因为Client端的serverMap可变
@@ -98,8 +124,10 @@ public class BaseServerClient implements Runnable{
             e.printStackTrace();
         }
     }
-
-    public void initClient(BaseServer baseServer) {
+    /**
+     * 从ServerMap中初始化Channel
+     * */
+    public void initNettyClient(BaseServer baseServer) {
         //init Netty client
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -125,22 +153,37 @@ public class BaseServerClient implements Runnable{
 
 
     }
-
+    /**
+     * BaseServerClient主线程，用于轮询探测可用server，保活现有Channel
+     * */
     public void run(){
         Log.info(this.baseServer.id,"servers connection completed!");
+
+
         while(true){
             Log.info(this.baseServer.id,"client alive, channelMap = "+this.channelMap.toString());
             try{
                 Thread.sleep(3000);
-                BaseMsgProto.BaseMsg.Builder builder =
-                        BaseMsgProto.BaseMsg.newBuilder();
-                builder.setServerid(this.baseServer.id);
-                builder.setAimid(-1);
-                builder.setMsgid(0);
-                builder.setContent("echo");
-                BaseMsgProto.BaseMsg msg =
-                        builder.build();
-                this.baseServer.messageManager.sendMsg(builder.getAimid(),msg);
+                try {
+                    //按照serverMap中的记录，建立连接
+                    for(Integer serverid : this.serverMap.keySet()){
+                        //跳过自身Server和channelMap中已经存在的
+                        if(serverid == this.baseServer.id || channelMap.keySet().contains(serverid)){
+                            continue;
+                        }
+                        //尝试添加Channel
+                        asyncAddServer(serverid,this.serverMap.get(serverid));
+                    }
+                    //发送ECHO保活
+                    for(Integer i : channelMap.keySet()){
+                        BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
+                                BaseMsgUtil.ECHO,-1,baseServer.id,3000);
+                        baseServer.messageManager.sendMsg(msg,-1);
+                    }
+
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
 
             }catch (Exception e){
                 e.printStackTrace();
