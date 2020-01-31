@@ -11,6 +11,9 @@ public class BaseMsgUtil {
     // 定时消息与恢复，用于保活，强制要求设置timeout
     public static final int ECHO = 2;
     public static final int ECHO_REPLY = 3;
+    // 投票，等待回复
+    public static final int VOTE = 4;
+    public static final int VOTE_REPLY = 5;
     // 单播无回复消息
     public static final int SIMPLE_NO_REPLY = 4;
     // 单播有回复消息

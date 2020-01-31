@@ -126,6 +126,7 @@ public class BaseServerClient implements Runnable{
     }
     /**
      * 从ServerMap中初始化Channel
+     * channelMap的值会不断被ServerMap中的值更新
      * */
     public void initNettyClient(BaseServer baseServer) {
         //init Netty client
@@ -157,8 +158,6 @@ public class BaseServerClient implements Runnable{
      * BaseServerClient主线程，用于轮询探测可用server，保活现有Channel
      * */
     public void run(){
-        Log.info(this.baseServer.id,"servers connection completed!");
-
 
         while(true){
             Log.info(this.baseServer.id,"client alive, channelMap = "+this.channelMap.toString());

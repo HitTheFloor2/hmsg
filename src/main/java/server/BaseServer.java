@@ -38,9 +38,14 @@ public class BaseServer {
 
     }
     public void init(){
+        //启动netty服务端，用来监听其他BaseServer的client发来的连接
         initNettyServer(this);
+        //启动私有的client
         this.client = new BaseServerClient(this);
+        //启动私有的消息管理器，所有的消息收发都由此工作
         this.messageManager = new MessageManager(this);
+
+        Log.info(this.id,"initial completed!");
     }
     public void initNettyServer(BaseServer baseServer){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -64,7 +69,7 @@ public class BaseServer {
                         }
                     });
             ChannelFuture channelFuture = ssmpServerBootstrap.bind(port).sync();
-            Log.logger.info("BaseServer.run() BaseServer "+this.inetSocketAddress.toString()+" started!");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
