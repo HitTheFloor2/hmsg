@@ -2,6 +2,11 @@ package message;
 
 import protobuf.BaseMsgProto;
 
+
+/**
+ * 简便使用BaseMsg的工具类
+ * 不推荐包含业务逻辑的判断出现在BaseMsgUtil
+ * */
 public class BaseMsgUtil {
     /**
      * Type of BaseMsg id and usage
@@ -20,47 +25,95 @@ public class BaseMsgUtil {
     public static final int SIMPLE = 5;
     public static final int SIMPLE_REPLY = 6;
 
+
+    //用于生成msgUUID的常量
+    public static final long UUID_INIT = 1L << 63;
+
     /**
      * 打印BaseMsg
+     * @param baseMsg 被转换成String的BaseMsg
+     * @return String类型的结果
      * */
-    public String ToString(BaseMsgProto.BaseMsg baseMsg){
-        return null;
+    public static synchronized String ToString(BaseMsgProto.BaseMsg baseMsg){
+        StringBuilder res = new StringBuilder();
+        res.append("msg_type:"+baseMsg.getMsgType()+"\n");
+        res.append("msg_sequence_number:"+baseMsg.getMsgSequenceNumber()+"\n");
+        res.append("msg_uuid:"+baseMsg.getMsgUuid()+"\n");
+        res.append("msg_reply_uuid:"+baseMsg.getMsgReplyUuid()+"\n");
+        res.append("server_sender_id:"+baseMsg.getServerSenderId()+"\n");
+        res.append("server_single_receiver_id:"+baseMsg.getServerSingleReceiverId()+"\n");
+        res.append("server_multi_receiver_id:"+baseMsg.getServerMultiReceiverIdList().toString()+"\n");
+        res.append("msg_timeout:"+baseMsg.getTimeout()+"\n");
+        res.append("msg_timestamp:"+baseMsg.getTimestamp()+"\n");
+        res.append("msg_content:"+baseMsg.getContent().toString()+"\n");
+        return res.toString();
     }
     /**
      * 生成BaseMsg实例
+     * @param msgType
+     * @param msgSeqNum
+     * @param senderId
+     * @param timeout
+     * @return
      * */
-    public static BaseMsgProto.BaseMsg getInstance(
-            int  msgType , int msgId , int senderId , int timeout){
+    public static synchronized BaseMsgProto.BaseMsg getInstance(
+            int  msgType , int msgSeqNum , int senderId , int timeout){
         BaseMsgProto.BaseMsg.Builder builder =
                 BaseMsgProto.BaseMsg.newBuilder();
         //消息类型
         builder.setMsgType(msgType);
-        //消息Id
-        builder.setMsgId(msgId);
+        //消息序列数
+        builder.setMsgSequenceNumber(msgSeqNum);
         //发送者id
-        builder.setSenderId(senderId);
+        builder.setServerSenderId(senderId);
         //超时
         builder.setTimeout(timeout);
         BaseMsgProto.BaseMsg msg = builder.build();
         return msg;
     }
-    public static BaseMsgProto.BaseMsg getInstance(
-            int  msgType , int msgId , int senderId , int receiverId ,int timeout){
+    /**
+     * 生成BaseMsg实例
+     * @param msgType
+     * @param msgSeqNum
+     * @param senderId
+     * @param receiverId
+     * @param timeout
+     * @return
+     * */
+    public static synchronized BaseMsgProto.BaseMsg getInstance(
+            int  msgType , int msgSeqNum , int senderId , int receiverId ,int timeout){
         BaseMsgProto.BaseMsg.Builder builder =
                 BaseMsgProto.BaseMsg.newBuilder();
         //消息类型
         builder.setMsgType(msgType);
         //消息Id
-        builder.setMsgId(msgId);
+        builder.setMsgSequenceNumber(msgSeqNum);
         //发送者id
-        builder.setSenderId(senderId);
+        builder.setServerSenderId(senderId);
         //接收者id
-        builder.setSingleReceiverId(receiverId);
+        builder.setServerSingleReceiverId(receiverId);
         //超时
         builder.setTimeout(timeout);
         BaseMsgProto.BaseMsg msg = builder.build();
         return msg;
     }
 
+    /**
+     * 使用msg的发送者id，当前序列号和时间戳生成一个全局独一无二的uuid
+     * uuid长度为64位，使用long类型存储
+     * 后32位是序列号，前32位中第一位是1，1-7位是serverid，其余24位是stamp的后24位
+     * @param server_sender_id
+     * @param msgSeqNum
+     * @param timestamp
+     * @return
+     * */
+    public static long createBaseMsgUUID(int server_sender_id,int msgSeqNum,int timestamp){
+        //TODO 优化
+        long part1 = (long)msgSeqNum;
+        String temp = Long.toBinaryString(timestamp);
+        long part2 = Long.parseUnsignedLong(temp.substring(temp.length()-25,temp.length()-1),2) << 32;
+        long part3 = (long)server_sender_id << 56;
+        return UUID_INIT | part1 | part2 | part3;
+    }
 
 }

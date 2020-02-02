@@ -17,82 +17,138 @@ public final class BaseMsgProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <pre>
+     * the type of msg
+     * </pre>
+     *
      * <code>int32 msg_type = 1;</code>
      * @return The msgType.
      */
     int getMsgType();
 
     /**
-     * <code>int32 msg_id = 2;</code>
-     * @return The msgId.
+     * <pre>
+     * the sequence number in sender server
+     * </pre>
+     *
+     * <code>int32 msg_sequence_number = 2;</code>
+     * @return The msgSequenceNumber.
      */
-    int getMsgId();
+    int getMsgSequenceNumber();
 
     /**
-     * <code>int32 reply_msg_id = 3;</code>
-     * @return The replyMsgId.
+     * <pre>
+     * the uuid of msg, made up by sender server's id, sequence number and timestamp
+     * </pre>
+     *
+     * <code>int64 msg_uuid = 3;</code>
+     * @return The msgUuid.
      */
-    int getReplyMsgId();
+    long getMsgUuid();
 
     /**
-     * <code>int32 sender_id = 4;</code>
-     * @return The senderId.
+     * <pre>
+     * if this msg is a reply to any action, record the uuid of the msg needed reply
+     * </pre>
+     *
+     * <code>int64 msg_reply_uuid = 4;</code>
+     * @return The msgReplyUuid.
      */
-    int getSenderId();
+    long getMsgReplyUuid();
 
     /**
-     * <code>int32 single_receiver_id = 5;</code>
-     * @return The singleReceiverId.
+     * <pre>
+     * sender server id
+     * </pre>
+     *
+     * <code>int32 server_sender_id = 5;</code>
+     * @return The serverSenderId.
      */
-    int getSingleReceiverId();
+    int getServerSenderId();
 
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
-     * @return A list containing the multiReceiverId.
+     * <pre>
+     * single receiver server id
+     * </pre>
+     *
+     * <code>int32 server_single_receiver_id = 6;</code>
+     * @return The serverSingleReceiverId.
      */
-    java.util.List<Integer> getMultiReceiverIdList();
+    int getServerSingleReceiverId();
+
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
-     * @return The count of multiReceiverId.
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * @return A list containing the serverMultiReceiverId.
      */
-    int getMultiReceiverIdCount();
+    java.util.List<Integer> getServerMultiReceiverIdList();
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * @return The count of serverMultiReceiverId.
+     */
+    int getServerMultiReceiverIdCount();
+    /**
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
      * @param index The index of the element to return.
-     * @return The multiReceiverId at the given index.
+     * @return The serverMultiReceiverId at the given index.
      */
-    int getMultiReceiverId(int index);
+    int getServerMultiReceiverId(int index);
 
     /**
-     * <code>int32 single_reply_id = 7;</code>
-     * @return The singleReplyId.
-     */
-    int getSingleReplyId();
-
-    /**
-     * <code>int32 single_reply_msg_id = 8;</code>
-     * @return The singleReplyMsgId.
-     */
-    int getSingleReplyMsgId();
-
-    /**
-     * <code>int64 timeout = 9;</code>
+     * <pre>
+     * if this msg needs timeout in reply
+     * </pre>
+     *
+     * <code>int32 timeout = 8;</code>
      * @return The timeout.
      */
-    long getTimeout();
+    int getTimeout();
 
     /**
-     * <code>int64 timestamp = 10;</code>
+     * <pre>
+     * timestamp, use System.currentTimeMillis()
+     * </pre>
+     *
+     * <code>int64 timestamp = 9;</code>
      * @return The timestamp.
      */
     long getTimestamp();
 
     /**
+     * <pre>
+     * msg reply need number
+     * </pre>
+     *
+     * <code>int32 need_reply_num = 10;</code>
+     * @return The needReplyNum.
+     */
+    int getNeedReplyNum();
+
+    /**
+     * <pre>
+     * content, maybe json
+     * </pre>
+     *
      * <code>string content = 11;</code>
      * @return The content.
      */
     String getContent();
     /**
+     * <pre>
+     * content, maybe json
+     * </pre>
+     *
      * <code>string content = 11;</code>
      * @return The bytes for content.
      */
@@ -112,7 +168,7 @@ public final class BaseMsgProto {
       super(builder);
     }
     private BaseMsg() {
-      multiReceiverId_ = emptyIntList();
+      serverMultiReceiverId_ = emptyIntList();
       content_ = "";
     }
 
@@ -154,63 +210,63 @@ public final class BaseMsgProto {
             }
             case 16: {
 
-              msgId_ = input.readInt32();
+              msgSequenceNumber_ = input.readInt32();
               break;
             }
             case 24: {
 
-              replyMsgId_ = input.readInt32();
+              msgUuid_ = input.readInt64();
               break;
             }
             case 32: {
 
-              senderId_ = input.readInt32();
+              msgReplyUuid_ = input.readInt64();
               break;
             }
             case 40: {
 
-              singleReceiverId_ = input.readInt32();
+              serverSenderId_ = input.readInt32();
               break;
             }
             case 48: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                multiReceiverId_ = newIntList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              multiReceiverId_.addInt(input.readInt32());
+
+              serverSingleReceiverId_ = input.readInt32();
               break;
             }
-            case 50: {
+            case 56: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                serverMultiReceiverId_ = newIntList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              serverMultiReceiverId_.addInt(input.readInt32());
+              break;
+            }
+            case 58: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-                multiReceiverId_ = newIntList();
+                serverMultiReceiverId_ = newIntList();
                 mutable_bitField0_ |= 0x00000001;
               }
               while (input.getBytesUntilLimit() > 0) {
-                multiReceiverId_.addInt(input.readInt32());
+                serverMultiReceiverId_.addInt(input.readInt32());
               }
               input.popLimit(limit);
               break;
             }
-            case 56: {
-
-              singleReplyId_ = input.readInt32();
-              break;
-            }
             case 64: {
 
-              singleReplyMsgId_ = input.readInt32();
+              timeout_ = input.readInt32();
               break;
             }
             case 72: {
 
-              timeout_ = input.readInt64();
+              timestamp_ = input.readInt64();
               break;
             }
             case 80: {
 
-              timestamp_ = input.readInt64();
+              needReplyNum_ = input.readInt32();
               break;
             }
             case 90: {
@@ -235,7 +291,7 @@ public final class BaseMsgProto {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          multiReceiverId_.makeImmutable(); // C
+          serverMultiReceiverId_.makeImmutable(); // C
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -257,6 +313,10 @@ public final class BaseMsgProto {
     public static final int MSG_TYPE_FIELD_NUMBER = 1;
     private int msgType_;
     /**
+     * <pre>
+     * the type of msg
+     * </pre>
+     *
      * <code>int32 msg_type = 1;</code>
      * @return The msgType.
      */
@@ -264,116 +324,164 @@ public final class BaseMsgProto {
       return msgType_;
     }
 
-    public static final int MSG_ID_FIELD_NUMBER = 2;
-    private int msgId_;
+    public static final int MSG_SEQUENCE_NUMBER_FIELD_NUMBER = 2;
+    private int msgSequenceNumber_;
     /**
-     * <code>int32 msg_id = 2;</code>
-     * @return The msgId.
+     * <pre>
+     * the sequence number in sender server
+     * </pre>
+     *
+     * <code>int32 msg_sequence_number = 2;</code>
+     * @return The msgSequenceNumber.
      */
-    public int getMsgId() {
-      return msgId_;
+    public int getMsgSequenceNumber() {
+      return msgSequenceNumber_;
     }
 
-    public static final int REPLY_MSG_ID_FIELD_NUMBER = 3;
-    private int replyMsgId_;
+    public static final int MSG_UUID_FIELD_NUMBER = 3;
+    private long msgUuid_;
     /**
-     * <code>int32 reply_msg_id = 3;</code>
-     * @return The replyMsgId.
+     * <pre>
+     * the uuid of msg, made up by sender server's id, sequence number and timestamp
+     * </pre>
+     *
+     * <code>int64 msg_uuid = 3;</code>
+     * @return The msgUuid.
      */
-    public int getReplyMsgId() {
-      return replyMsgId_;
+    public long getMsgUuid() {
+      return msgUuid_;
     }
 
-    public static final int SENDER_ID_FIELD_NUMBER = 4;
-    private int senderId_;
+    public static final int MSG_REPLY_UUID_FIELD_NUMBER = 4;
+    private long msgReplyUuid_;
     /**
-     * <code>int32 sender_id = 4;</code>
-     * @return The senderId.
+     * <pre>
+     * if this msg is a reply to any action, record the uuid of the msg needed reply
+     * </pre>
+     *
+     * <code>int64 msg_reply_uuid = 4;</code>
+     * @return The msgReplyUuid.
      */
-    public int getSenderId() {
-      return senderId_;
+    public long getMsgReplyUuid() {
+      return msgReplyUuid_;
     }
 
-    public static final int SINGLE_RECEIVER_ID_FIELD_NUMBER = 5;
-    private int singleReceiverId_;
+    public static final int SERVER_SENDER_ID_FIELD_NUMBER = 5;
+    private int serverSenderId_;
     /**
-     * <code>int32 single_receiver_id = 5;</code>
-     * @return The singleReceiverId.
+     * <pre>
+     * sender server id
+     * </pre>
+     *
+     * <code>int32 server_sender_id = 5;</code>
+     * @return The serverSenderId.
      */
-    public int getSingleReceiverId() {
-      return singleReceiverId_;
+    public int getServerSenderId() {
+      return serverSenderId_;
     }
 
-    public static final int MULTI_RECEIVER_ID_FIELD_NUMBER = 6;
-    private com.google.protobuf.Internal.IntList multiReceiverId_;
+    public static final int SERVER_SINGLE_RECEIVER_ID_FIELD_NUMBER = 6;
+    private int serverSingleReceiverId_;
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
-     * @return A list containing the multiReceiverId.
+     * <pre>
+     * single receiver server id
+     * </pre>
+     *
+     * <code>int32 server_single_receiver_id = 6;</code>
+     * @return The serverSingleReceiverId.
+     */
+    public int getServerSingleReceiverId() {
+      return serverSingleReceiverId_;
+    }
+
+    public static final int SERVER_MULTI_RECEIVER_ID_FIELD_NUMBER = 7;
+    private com.google.protobuf.Internal.IntList serverMultiReceiverId_;
+    /**
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * @return A list containing the serverMultiReceiverId.
      */
     public java.util.List<Integer>
-        getMultiReceiverIdList() {
-      return multiReceiverId_;
+        getServerMultiReceiverIdList() {
+      return serverMultiReceiverId_;
     }
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
-     * @return The count of multiReceiverId.
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * @return The count of serverMultiReceiverId.
      */
-    public int getMultiReceiverIdCount() {
-      return multiReceiverId_.size();
+    public int getServerMultiReceiverIdCount() {
+      return serverMultiReceiverId_.size();
     }
     /**
-     * <code>repeated int32 multi_receiver_id = 6;</code>
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated int32 server_multi_receiver_id = 7;</code>
      * @param index The index of the element to return.
-     * @return The multiReceiverId at the given index.
+     * @return The serverMultiReceiverId at the given index.
      */
-    public int getMultiReceiverId(int index) {
-      return multiReceiverId_.getInt(index);
+    public int getServerMultiReceiverId(int index) {
+      return serverMultiReceiverId_.getInt(index);
     }
-    private int multiReceiverIdMemoizedSerializedSize = -1;
+    private int serverMultiReceiverIdMemoizedSerializedSize = -1;
 
-    public static final int SINGLE_REPLY_ID_FIELD_NUMBER = 7;
-    private int singleReplyId_;
+    public static final int TIMEOUT_FIELD_NUMBER = 8;
+    private int timeout_;
     /**
-     * <code>int32 single_reply_id = 7;</code>
-     * @return The singleReplyId.
-     */
-    public int getSingleReplyId() {
-      return singleReplyId_;
-    }
-
-    public static final int SINGLE_REPLY_MSG_ID_FIELD_NUMBER = 8;
-    private int singleReplyMsgId_;
-    /**
-     * <code>int32 single_reply_msg_id = 8;</code>
-     * @return The singleReplyMsgId.
-     */
-    public int getSingleReplyMsgId() {
-      return singleReplyMsgId_;
-    }
-
-    public static final int TIMEOUT_FIELD_NUMBER = 9;
-    private long timeout_;
-    /**
-     * <code>int64 timeout = 9;</code>
+     * <pre>
+     * if this msg needs timeout in reply
+     * </pre>
+     *
+     * <code>int32 timeout = 8;</code>
      * @return The timeout.
      */
-    public long getTimeout() {
+    public int getTimeout() {
       return timeout_;
     }
 
-    public static final int TIMESTAMP_FIELD_NUMBER = 10;
+    public static final int TIMESTAMP_FIELD_NUMBER = 9;
     private long timestamp_;
     /**
-     * <code>int64 timestamp = 10;</code>
+     * <pre>
+     * timestamp, use System.currentTimeMillis()
+     * </pre>
+     *
+     * <code>int64 timestamp = 9;</code>
      * @return The timestamp.
      */
     public long getTimestamp() {
       return timestamp_;
     }
 
+    public static final int NEED_REPLY_NUM_FIELD_NUMBER = 10;
+    private int needReplyNum_;
+    /**
+     * <pre>
+     * msg reply need number
+     * </pre>
+     *
+     * <code>int32 need_reply_num = 10;</code>
+     * @return The needReplyNum.
+     */
+    public int getNeedReplyNum() {
+      return needReplyNum_;
+    }
+
     public static final int CONTENT_FIELD_NUMBER = 11;
     private volatile Object content_;
     /**
+     * <pre>
+     * content, maybe json
+     * </pre>
+     *
      * <code>string content = 11;</code>
      * @return The content.
      */
@@ -390,6 +498,10 @@ public final class BaseMsgProto {
       }
     }
     /**
+     * <pre>
+     * content, maybe json
+     * </pre>
+     *
      * <code>string content = 11;</code>
      * @return The bytes for content.
      */
@@ -425,36 +537,36 @@ public final class BaseMsgProto {
       if (msgType_ != 0) {
         output.writeInt32(1, msgType_);
       }
-      if (msgId_ != 0) {
-        output.writeInt32(2, msgId_);
+      if (msgSequenceNumber_ != 0) {
+        output.writeInt32(2, msgSequenceNumber_);
       }
-      if (replyMsgId_ != 0) {
-        output.writeInt32(3, replyMsgId_);
+      if (msgUuid_ != 0L) {
+        output.writeInt64(3, msgUuid_);
       }
-      if (senderId_ != 0) {
-        output.writeInt32(4, senderId_);
+      if (msgReplyUuid_ != 0L) {
+        output.writeInt64(4, msgReplyUuid_);
       }
-      if (singleReceiverId_ != 0) {
-        output.writeInt32(5, singleReceiverId_);
+      if (serverSenderId_ != 0) {
+        output.writeInt32(5, serverSenderId_);
       }
-      if (getMultiReceiverIdList().size() > 0) {
-        output.writeUInt32NoTag(50);
-        output.writeUInt32NoTag(multiReceiverIdMemoizedSerializedSize);
+      if (serverSingleReceiverId_ != 0) {
+        output.writeInt32(6, serverSingleReceiverId_);
       }
-      for (int i = 0; i < multiReceiverId_.size(); i++) {
-        output.writeInt32NoTag(multiReceiverId_.getInt(i));
+      if (getServerMultiReceiverIdList().size() > 0) {
+        output.writeUInt32NoTag(58);
+        output.writeUInt32NoTag(serverMultiReceiverIdMemoizedSerializedSize);
       }
-      if (singleReplyId_ != 0) {
-        output.writeInt32(7, singleReplyId_);
+      for (int i = 0; i < serverMultiReceiverId_.size(); i++) {
+        output.writeInt32NoTag(serverMultiReceiverId_.getInt(i));
       }
-      if (singleReplyMsgId_ != 0) {
-        output.writeInt32(8, singleReplyMsgId_);
-      }
-      if (timeout_ != 0L) {
-        output.writeInt64(9, timeout_);
+      if (timeout_ != 0) {
+        output.writeInt32(8, timeout_);
       }
       if (timestamp_ != 0L) {
-        output.writeInt64(10, timestamp_);
+        output.writeInt64(9, timestamp_);
+      }
+      if (needReplyNum_ != 0) {
+        output.writeInt32(10, needReplyNum_);
       }
       if (!getContentBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 11, content_);
@@ -472,51 +584,51 @@ public final class BaseMsgProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, msgType_);
       }
-      if (msgId_ != 0) {
+      if (msgSequenceNumber_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, msgId_);
+          .computeInt32Size(2, msgSequenceNumber_);
       }
-      if (replyMsgId_ != 0) {
+      if (msgUuid_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, replyMsgId_);
+          .computeInt64Size(3, msgUuid_);
       }
-      if (senderId_ != 0) {
+      if (msgReplyUuid_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, senderId_);
+          .computeInt64Size(4, msgReplyUuid_);
       }
-      if (singleReceiverId_ != 0) {
+      if (serverSenderId_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, singleReceiverId_);
+          .computeInt32Size(5, serverSenderId_);
+      }
+      if (serverSingleReceiverId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(6, serverSingleReceiverId_);
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < multiReceiverId_.size(); i++) {
+        for (int i = 0; i < serverMultiReceiverId_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(multiReceiverId_.getInt(i));
+            .computeInt32SizeNoTag(serverMultiReceiverId_.getInt(i));
         }
         size += dataSize;
-        if (!getMultiReceiverIdList().isEmpty()) {
+        if (!getServerMultiReceiverIdList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        multiReceiverIdMemoizedSerializedSize = dataSize;
+        serverMultiReceiverIdMemoizedSerializedSize = dataSize;
       }
-      if (singleReplyId_ != 0) {
+      if (timeout_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(7, singleReplyId_);
-      }
-      if (singleReplyMsgId_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(8, singleReplyMsgId_);
-      }
-      if (timeout_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(9, timeout_);
+          .computeInt32Size(8, timeout_);
       }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(10, timestamp_);
+          .computeInt64Size(9, timestamp_);
+      }
+      if (needReplyNum_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(10, needReplyNum_);
       }
       if (!getContentBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, content_);
@@ -538,24 +650,24 @@ public final class BaseMsgProto {
 
       if (getMsgType()
           != other.getMsgType()) return false;
-      if (getMsgId()
-          != other.getMsgId()) return false;
-      if (getReplyMsgId()
-          != other.getReplyMsgId()) return false;
-      if (getSenderId()
-          != other.getSenderId()) return false;
-      if (getSingleReceiverId()
-          != other.getSingleReceiverId()) return false;
-      if (!getMultiReceiverIdList()
-          .equals(other.getMultiReceiverIdList())) return false;
-      if (getSingleReplyId()
-          != other.getSingleReplyId()) return false;
-      if (getSingleReplyMsgId()
-          != other.getSingleReplyMsgId()) return false;
+      if (getMsgSequenceNumber()
+          != other.getMsgSequenceNumber()) return false;
+      if (getMsgUuid()
+          != other.getMsgUuid()) return false;
+      if (getMsgReplyUuid()
+          != other.getMsgReplyUuid()) return false;
+      if (getServerSenderId()
+          != other.getServerSenderId()) return false;
+      if (getServerSingleReceiverId()
+          != other.getServerSingleReceiverId()) return false;
+      if (!getServerMultiReceiverIdList()
+          .equals(other.getServerMultiReceiverIdList())) return false;
       if (getTimeout()
           != other.getTimeout()) return false;
       if (getTimestamp()
           != other.getTimestamp()) return false;
+      if (getNeedReplyNum()
+          != other.getNeedReplyNum()) return false;
       if (!getContent()
           .equals(other.getContent())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -571,28 +683,29 @@ public final class BaseMsgProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + MSG_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + getMsgType();
-      hash = (37 * hash) + MSG_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getMsgId();
-      hash = (37 * hash) + REPLY_MSG_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getReplyMsgId();
-      hash = (37 * hash) + SENDER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getSenderId();
-      hash = (37 * hash) + SINGLE_RECEIVER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getSingleReceiverId();
-      if (getMultiReceiverIdCount() > 0) {
-        hash = (37 * hash) + MULTI_RECEIVER_ID_FIELD_NUMBER;
-        hash = (53 * hash) + getMultiReceiverIdList().hashCode();
-      }
-      hash = (37 * hash) + SINGLE_REPLY_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getSingleReplyId();
-      hash = (37 * hash) + SINGLE_REPLY_MSG_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getSingleReplyMsgId();
-      hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+      hash = (37 * hash) + MSG_SEQUENCE_NUMBER_FIELD_NUMBER;
+      hash = (53 * hash) + getMsgSequenceNumber();
+      hash = (37 * hash) + MSG_UUID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTimeout());
+          getMsgUuid());
+      hash = (37 * hash) + MSG_REPLY_UUID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMsgReplyUuid());
+      hash = (37 * hash) + SERVER_SENDER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getServerSenderId();
+      hash = (37 * hash) + SERVER_SINGLE_RECEIVER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getServerSingleReceiverId();
+      if (getServerMultiReceiverIdCount() > 0) {
+        hash = (37 * hash) + SERVER_MULTI_RECEIVER_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getServerMultiReceiverIdList().hashCode();
+      }
+      hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+      hash = (53 * hash) + getTimeout();
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTimestamp());
+      hash = (37 * hash) + NEED_REPLY_NUM_FIELD_NUMBER;
+      hash = (53 * hash) + getNeedReplyNum();
       hash = (37 * hash) + CONTENT_FIELD_NUMBER;
       hash = (53 * hash) + getContent().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -730,23 +843,23 @@ public final class BaseMsgProto {
         super.clear();
         msgType_ = 0;
 
-        msgId_ = 0;
+        msgSequenceNumber_ = 0;
 
-        replyMsgId_ = 0;
+        msgUuid_ = 0L;
 
-        senderId_ = 0;
+        msgReplyUuid_ = 0L;
 
-        singleReceiverId_ = 0;
+        serverSenderId_ = 0;
 
-        multiReceiverId_ = emptyIntList();
+        serverSingleReceiverId_ = 0;
+
+        serverMultiReceiverId_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000001);
-        singleReplyId_ = 0;
-
-        singleReplyMsgId_ = 0;
-
-        timeout_ = 0L;
+        timeout_ = 0;
 
         timestamp_ = 0L;
+
+        needReplyNum_ = 0;
 
         content_ = "";
 
@@ -778,19 +891,19 @@ public final class BaseMsgProto {
         BaseMsg result = new BaseMsg(this);
         int from_bitField0_ = bitField0_;
         result.msgType_ = msgType_;
-        result.msgId_ = msgId_;
-        result.replyMsgId_ = replyMsgId_;
-        result.senderId_ = senderId_;
-        result.singleReceiverId_ = singleReceiverId_;
+        result.msgSequenceNumber_ = msgSequenceNumber_;
+        result.msgUuid_ = msgUuid_;
+        result.msgReplyUuid_ = msgReplyUuid_;
+        result.serverSenderId_ = serverSenderId_;
+        result.serverSingleReceiverId_ = serverSingleReceiverId_;
         if (((bitField0_ & 0x00000001) != 0)) {
-          multiReceiverId_.makeImmutable();
+          serverMultiReceiverId_.makeImmutable();
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.multiReceiverId_ = multiReceiverId_;
-        result.singleReplyId_ = singleReplyId_;
-        result.singleReplyMsgId_ = singleReplyMsgId_;
+        result.serverMultiReceiverId_ = serverMultiReceiverId_;
         result.timeout_ = timeout_;
         result.timestamp_ = timestamp_;
+        result.needReplyNum_ = needReplyNum_;
         result.content_ = content_;
         onBuilt();
         return result;
@@ -843,39 +956,39 @@ public final class BaseMsgProto {
         if (other.getMsgType() != 0) {
           setMsgType(other.getMsgType());
         }
-        if (other.getMsgId() != 0) {
-          setMsgId(other.getMsgId());
+        if (other.getMsgSequenceNumber() != 0) {
+          setMsgSequenceNumber(other.getMsgSequenceNumber());
         }
-        if (other.getReplyMsgId() != 0) {
-          setReplyMsgId(other.getReplyMsgId());
+        if (other.getMsgUuid() != 0L) {
+          setMsgUuid(other.getMsgUuid());
         }
-        if (other.getSenderId() != 0) {
-          setSenderId(other.getSenderId());
+        if (other.getMsgReplyUuid() != 0L) {
+          setMsgReplyUuid(other.getMsgReplyUuid());
         }
-        if (other.getSingleReceiverId() != 0) {
-          setSingleReceiverId(other.getSingleReceiverId());
+        if (other.getServerSenderId() != 0) {
+          setServerSenderId(other.getServerSenderId());
         }
-        if (!other.multiReceiverId_.isEmpty()) {
-          if (multiReceiverId_.isEmpty()) {
-            multiReceiverId_ = other.multiReceiverId_;
+        if (other.getServerSingleReceiverId() != 0) {
+          setServerSingleReceiverId(other.getServerSingleReceiverId());
+        }
+        if (!other.serverMultiReceiverId_.isEmpty()) {
+          if (serverMultiReceiverId_.isEmpty()) {
+            serverMultiReceiverId_ = other.serverMultiReceiverId_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureMultiReceiverIdIsMutable();
-            multiReceiverId_.addAll(other.multiReceiverId_);
+            ensureServerMultiReceiverIdIsMutable();
+            serverMultiReceiverId_.addAll(other.serverMultiReceiverId_);
           }
           onChanged();
         }
-        if (other.getSingleReplyId() != 0) {
-          setSingleReplyId(other.getSingleReplyId());
-        }
-        if (other.getSingleReplyMsgId() != 0) {
-          setSingleReplyMsgId(other.getSingleReplyMsgId());
-        }
-        if (other.getTimeout() != 0L) {
+        if (other.getTimeout() != 0) {
           setTimeout(other.getTimeout());
         }
         if (other.getTimestamp() != 0L) {
           setTimestamp(other.getTimestamp());
+        }
+        if (other.getNeedReplyNum() != 0) {
+          setNeedReplyNum(other.getNeedReplyNum());
         }
         if (!other.getContent().isEmpty()) {
           content_ = other.content_;
@@ -913,6 +1026,10 @@ public final class BaseMsgProto {
 
       private int msgType_ ;
       /**
+       * <pre>
+       * the type of msg
+       * </pre>
+       *
        * <code>int32 msg_type = 1;</code>
        * @return The msgType.
        */
@@ -920,6 +1037,10 @@ public final class BaseMsgProto {
         return msgType_;
       }
       /**
+       * <pre>
+       * the type of msg
+       * </pre>
+       *
        * <code>int32 msg_type = 1;</code>
        * @param value The msgType to set.
        * @return This builder for chaining.
@@ -931,6 +1052,10 @@ public final class BaseMsgProto {
         return this;
       }
       /**
+       * <pre>
+       * the type of msg
+       * </pre>
+       *
        * <code>int32 msg_type = 1;</code>
        * @return This builder for chaining.
        */
@@ -941,305 +1066,383 @@ public final class BaseMsgProto {
         return this;
       }
 
-      private int msgId_ ;
+      private int msgSequenceNumber_ ;
       /**
-       * <code>int32 msg_id = 2;</code>
-       * @return The msgId.
+       * <pre>
+       * the sequence number in sender server
+       * </pre>
+       *
+       * <code>int32 msg_sequence_number = 2;</code>
+       * @return The msgSequenceNumber.
        */
-      public int getMsgId() {
-        return msgId_;
+      public int getMsgSequenceNumber() {
+        return msgSequenceNumber_;
       }
       /**
-       * <code>int32 msg_id = 2;</code>
-       * @param value The msgId to set.
+       * <pre>
+       * the sequence number in sender server
+       * </pre>
+       *
+       * <code>int32 msg_sequence_number = 2;</code>
+       * @param value The msgSequenceNumber to set.
        * @return This builder for chaining.
        */
-      public Builder setMsgId(int value) {
+      public Builder setMsgSequenceNumber(int value) {
         
-        msgId_ = value;
+        msgSequenceNumber_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 msg_id = 2;</code>
+       * <pre>
+       * the sequence number in sender server
+       * </pre>
+       *
+       * <code>int32 msg_sequence_number = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearMsgId() {
+      public Builder clearMsgSequenceNumber() {
         
-        msgId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int replyMsgId_ ;
-      /**
-       * <code>int32 reply_msg_id = 3;</code>
-       * @return The replyMsgId.
-       */
-      public int getReplyMsgId() {
-        return replyMsgId_;
-      }
-      /**
-       * <code>int32 reply_msg_id = 3;</code>
-       * @param value The replyMsgId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setReplyMsgId(int value) {
-        
-        replyMsgId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 reply_msg_id = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearReplyMsgId() {
-        
-        replyMsgId_ = 0;
+        msgSequenceNumber_ = 0;
         onChanged();
         return this;
       }
 
-      private int senderId_ ;
+      private long msgUuid_ ;
       /**
-       * <code>int32 sender_id = 4;</code>
-       * @return The senderId.
+       * <pre>
+       * the uuid of msg, made up by sender server's id, sequence number and timestamp
+       * </pre>
+       *
+       * <code>int64 msg_uuid = 3;</code>
+       * @return The msgUuid.
        */
-      public int getSenderId() {
-        return senderId_;
+      public long getMsgUuid() {
+        return msgUuid_;
       }
       /**
-       * <code>int32 sender_id = 4;</code>
-       * @param value The senderId to set.
+       * <pre>
+       * the uuid of msg, made up by sender server's id, sequence number and timestamp
+       * </pre>
+       *
+       * <code>int64 msg_uuid = 3;</code>
+       * @param value The msgUuid to set.
        * @return This builder for chaining.
        */
-      public Builder setSenderId(int value) {
+      public Builder setMsgUuid(long value) {
         
-        senderId_ = value;
+        msgUuid_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 sender_id = 4;</code>
+       * <pre>
+       * the uuid of msg, made up by sender server's id, sequence number and timestamp
+       * </pre>
+       *
+       * <code>int64 msg_uuid = 3;</code>
        * @return This builder for chaining.
        */
-      public Builder clearSenderId() {
+      public Builder clearMsgUuid() {
         
-        senderId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int singleReceiverId_ ;
-      /**
-       * <code>int32 single_receiver_id = 5;</code>
-       * @return The singleReceiverId.
-       */
-      public int getSingleReceiverId() {
-        return singleReceiverId_;
-      }
-      /**
-       * <code>int32 single_receiver_id = 5;</code>
-       * @param value The singleReceiverId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSingleReceiverId(int value) {
-        
-        singleReceiverId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 single_receiver_id = 5;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSingleReceiverId() {
-        
-        singleReceiverId_ = 0;
+        msgUuid_ = 0L;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.Internal.IntList multiReceiverId_ = emptyIntList();
-      private void ensureMultiReceiverIdIsMutable() {
+      private long msgReplyUuid_ ;
+      /**
+       * <pre>
+       * if this msg is a reply to any action, record the uuid of the msg needed reply
+       * </pre>
+       *
+       * <code>int64 msg_reply_uuid = 4;</code>
+       * @return The msgReplyUuid.
+       */
+      public long getMsgReplyUuid() {
+        return msgReplyUuid_;
+      }
+      /**
+       * <pre>
+       * if this msg is a reply to any action, record the uuid of the msg needed reply
+       * </pre>
+       *
+       * <code>int64 msg_reply_uuid = 4;</code>
+       * @param value The msgReplyUuid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgReplyUuid(long value) {
+        
+        msgReplyUuid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * if this msg is a reply to any action, record the uuid of the msg needed reply
+       * </pre>
+       *
+       * <code>int64 msg_reply_uuid = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMsgReplyUuid() {
+        
+        msgReplyUuid_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private int serverSenderId_ ;
+      /**
+       * <pre>
+       * sender server id
+       * </pre>
+       *
+       * <code>int32 server_sender_id = 5;</code>
+       * @return The serverSenderId.
+       */
+      public int getServerSenderId() {
+        return serverSenderId_;
+      }
+      /**
+       * <pre>
+       * sender server id
+       * </pre>
+       *
+       * <code>int32 server_sender_id = 5;</code>
+       * @param value The serverSenderId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setServerSenderId(int value) {
+        
+        serverSenderId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * sender server id
+       * </pre>
+       *
+       * <code>int32 server_sender_id = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearServerSenderId() {
+        
+        serverSenderId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int serverSingleReceiverId_ ;
+      /**
+       * <pre>
+       * single receiver server id
+       * </pre>
+       *
+       * <code>int32 server_single_receiver_id = 6;</code>
+       * @return The serverSingleReceiverId.
+       */
+      public int getServerSingleReceiverId() {
+        return serverSingleReceiverId_;
+      }
+      /**
+       * <pre>
+       * single receiver server id
+       * </pre>
+       *
+       * <code>int32 server_single_receiver_id = 6;</code>
+       * @param value The serverSingleReceiverId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setServerSingleReceiverId(int value) {
+        
+        serverSingleReceiverId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * single receiver server id
+       * </pre>
+       *
+       * <code>int32 server_single_receiver_id = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearServerSingleReceiverId() {
+        
+        serverSingleReceiverId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.Internal.IntList serverMultiReceiverId_ = emptyIntList();
+      private void ensureServerMultiReceiverIdIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          multiReceiverId_ = mutableCopy(multiReceiverId_);
+          serverMultiReceiverId_ = mutableCopy(serverMultiReceiverId_);
           bitField0_ |= 0x00000001;
          }
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
-       * @return A list containing the multiReceiverId.
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * @return A list containing the serverMultiReceiverId.
        */
       public java.util.List<Integer>
-          getMultiReceiverIdList() {
+          getServerMultiReceiverIdList() {
         return ((bitField0_ & 0x00000001) != 0) ?
-                 java.util.Collections.unmodifiableList(multiReceiverId_) : multiReceiverId_;
+                 java.util.Collections.unmodifiableList(serverMultiReceiverId_) : serverMultiReceiverId_;
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
-       * @return The count of multiReceiverId.
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * @return The count of serverMultiReceiverId.
        */
-      public int getMultiReceiverIdCount() {
-        return multiReceiverId_.size();
+      public int getServerMultiReceiverIdCount() {
+        return serverMultiReceiverId_.size();
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
        * @param index The index of the element to return.
-       * @return The multiReceiverId at the given index.
+       * @return The serverMultiReceiverId at the given index.
        */
-      public int getMultiReceiverId(int index) {
-        return multiReceiverId_.getInt(index);
+      public int getServerMultiReceiverId(int index) {
+        return serverMultiReceiverId_.getInt(index);
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
        * @param index The index to set the value at.
-       * @param value The multiReceiverId to set.
+       * @param value The serverMultiReceiverId to set.
        * @return This builder for chaining.
        */
-      public Builder setMultiReceiverId(
+      public Builder setServerMultiReceiverId(
           int index, int value) {
-        ensureMultiReceiverIdIsMutable();
-        multiReceiverId_.setInt(index, value);
+        ensureServerMultiReceiverIdIsMutable();
+        serverMultiReceiverId_.setInt(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
-       * @param value The multiReceiverId to add.
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * @param value The serverMultiReceiverId to add.
        * @return This builder for chaining.
        */
-      public Builder addMultiReceiverId(int value) {
-        ensureMultiReceiverIdIsMutable();
-        multiReceiverId_.addInt(value);
+      public Builder addServerMultiReceiverId(int value) {
+        ensureServerMultiReceiverIdIsMutable();
+        serverMultiReceiverId_.addInt(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
-       * @param values The multiReceiverId to add.
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * @param values The serverMultiReceiverId to add.
        * @return This builder for chaining.
        */
-      public Builder addAllMultiReceiverId(
+      public Builder addAllServerMultiReceiverId(
           Iterable<? extends Integer> values) {
-        ensureMultiReceiverIdIsMutable();
+        ensureServerMultiReceiverIdIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, multiReceiverId_);
+            values, serverMultiReceiverId_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated int32 multi_receiver_id = 6;</code>
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated int32 server_multi_receiver_id = 7;</code>
        * @return This builder for chaining.
        */
-      public Builder clearMultiReceiverId() {
-        multiReceiverId_ = emptyIntList();
+      public Builder clearServerMultiReceiverId() {
+        serverMultiReceiverId_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
 
-      private int singleReplyId_ ;
+      private int timeout_ ;
       /**
-       * <code>int32 single_reply_id = 7;</code>
-       * @return The singleReplyId.
-       */
-      public int getSingleReplyId() {
-        return singleReplyId_;
-      }
-      /**
-       * <code>int32 single_reply_id = 7;</code>
-       * @param value The singleReplyId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSingleReplyId(int value) {
-        
-        singleReplyId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 single_reply_id = 7;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSingleReplyId() {
-        
-        singleReplyId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int singleReplyMsgId_ ;
-      /**
-       * <code>int32 single_reply_msg_id = 8;</code>
-       * @return The singleReplyMsgId.
-       */
-      public int getSingleReplyMsgId() {
-        return singleReplyMsgId_;
-      }
-      /**
-       * <code>int32 single_reply_msg_id = 8;</code>
-       * @param value The singleReplyMsgId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSingleReplyMsgId(int value) {
-        
-        singleReplyMsgId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 single_reply_msg_id = 8;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSingleReplyMsgId() {
-        
-        singleReplyMsgId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private long timeout_ ;
-      /**
-       * <code>int64 timeout = 9;</code>
+       * <pre>
+       * if this msg needs timeout in reply
+       * </pre>
+       *
+       * <code>int32 timeout = 8;</code>
        * @return The timeout.
        */
-      public long getTimeout() {
+      public int getTimeout() {
         return timeout_;
       }
       /**
-       * <code>int64 timeout = 9;</code>
+       * <pre>
+       * if this msg needs timeout in reply
+       * </pre>
+       *
+       * <code>int32 timeout = 8;</code>
        * @param value The timeout to set.
        * @return This builder for chaining.
        */
-      public Builder setTimeout(long value) {
+      public Builder setTimeout(int value) {
         
         timeout_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 timeout = 9;</code>
+       * <pre>
+       * if this msg needs timeout in reply
+       * </pre>
+       *
+       * <code>int32 timeout = 8;</code>
        * @return This builder for chaining.
        */
       public Builder clearTimeout() {
         
-        timeout_ = 0L;
+        timeout_ = 0;
         onChanged();
         return this;
       }
 
       private long timestamp_ ;
       /**
-       * <code>int64 timestamp = 10;</code>
+       * <pre>
+       * timestamp, use System.currentTimeMillis()
+       * </pre>
+       *
+       * <code>int64 timestamp = 9;</code>
        * @return The timestamp.
        */
       public long getTimestamp() {
         return timestamp_;
       }
       /**
-       * <code>int64 timestamp = 10;</code>
+       * <pre>
+       * timestamp, use System.currentTimeMillis()
+       * </pre>
+       *
+       * <code>int64 timestamp = 9;</code>
        * @param value The timestamp to set.
        * @return This builder for chaining.
        */
@@ -1250,7 +1453,11 @@ public final class BaseMsgProto {
         return this;
       }
       /**
-       * <code>int64 timestamp = 10;</code>
+       * <pre>
+       * timestamp, use System.currentTimeMillis()
+       * </pre>
+       *
+       * <code>int64 timestamp = 9;</code>
        * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
@@ -1260,8 +1467,54 @@ public final class BaseMsgProto {
         return this;
       }
 
+      private int needReplyNum_ ;
+      /**
+       * <pre>
+       * msg reply need number
+       * </pre>
+       *
+       * <code>int32 need_reply_num = 10;</code>
+       * @return The needReplyNum.
+       */
+      public int getNeedReplyNum() {
+        return needReplyNum_;
+      }
+      /**
+       * <pre>
+       * msg reply need number
+       * </pre>
+       *
+       * <code>int32 need_reply_num = 10;</code>
+       * @param value The needReplyNum to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNeedReplyNum(int value) {
+        
+        needReplyNum_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * msg reply need number
+       * </pre>
+       *
+       * <code>int32 need_reply_num = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNeedReplyNum() {
+        
+        needReplyNum_ = 0;
+        onChanged();
+        return this;
+      }
+
       private Object content_ = "";
       /**
+       * <pre>
+       * content, maybe json
+       * </pre>
+       *
        * <code>string content = 11;</code>
        * @return The content.
        */
@@ -1278,6 +1531,10 @@ public final class BaseMsgProto {
         }
       }
       /**
+       * <pre>
+       * content, maybe json
+       * </pre>
+       *
        * <code>string content = 11;</code>
        * @return The bytes for content.
        */
@@ -1295,6 +1552,10 @@ public final class BaseMsgProto {
         }
       }
       /**
+       * <pre>
+       * content, maybe json
+       * </pre>
+       *
        * <code>string content = 11;</code>
        * @param value The content to set.
        * @return This builder for chaining.
@@ -1310,6 +1571,10 @@ public final class BaseMsgProto {
         return this;
       }
       /**
+       * <pre>
+       * content, maybe json
+       * </pre>
+       *
        * <code>string content = 11;</code>
        * @return This builder for chaining.
        */
@@ -1320,6 +1585,10 @@ public final class BaseMsgProto {
         return this;
       }
       /**
+       * <pre>
+       * content, maybe json
+       * </pre>
+       *
        * <code>string content = 11;</code>
        * @param value The bytes for content to set.
        * @return This builder for chaining.
@@ -1402,14 +1671,14 @@ public final class BaseMsgProto {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\rBaseMsg.proto\"\366\001\n\007BaseMsg\022\020\n\010msg_type\030" +
-      "\001 \001(\005\022\016\n\006msg_id\030\002 \001(\005\022\024\n\014reply_msg_id\030\003 " +
-      "\001(\005\022\021\n\tsender_id\030\004 \001(\005\022\032\n\022single_receive" +
-      "r_id\030\005 \001(\005\022\031\n\021multi_receiver_id\030\006 \003(\005\022\027\n" +
-      "\017single_reply_id\030\007 \001(\005\022\033\n\023single_reply_m" +
-      "sg_id\030\010 \001(\005\022\017\n\007timeout\030\t \001(\003\022\021\n\ttimestam" +
-      "p\030\n \001(\003\022\017\n\007content\030\013 \001(\tB\016B\014BaseMsgProto" +
-      "b\006proto3"
+      "\n\rBaseMsg.proto\"\216\002\n\007BaseMsg\022\020\n\010msg_type\030" +
+      "\001 \001(\005\022\033\n\023msg_sequence_number\030\002 \001(\005\022\020\n\010ms" +
+      "g_uuid\030\003 \001(\003\022\026\n\016msg_reply_uuid\030\004 \001(\003\022\030\n\020" +
+      "server_sender_id\030\005 \001(\005\022!\n\031server_single_" +
+      "receiver_id\030\006 \001(\005\022 \n\030server_multi_receiv" +
+      "er_id\030\007 \003(\005\022\017\n\007timeout\030\010 \001(\005\022\021\n\ttimestam" +
+      "p\030\t \001(\003\022\026\n\016need_reply_num\030\n \001(\005\022\017\n\007conte" +
+      "nt\030\013 \001(\tB\016B\014BaseMsgProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1420,7 +1689,7 @@ public final class BaseMsgProto {
     internal_static_BaseMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BaseMsg_descriptor,
-        new String[] { "MsgType", "MsgId", "ReplyMsgId", "SenderId", "SingleReceiverId", "MultiReceiverId", "SingleReplyId", "SingleReplyMsgId", "Timeout", "Timestamp", "Content", });
+        new String[] { "MsgType", "MsgSequenceNumber", "MsgUuid", "MsgReplyUuid", "ServerSenderId", "ServerSingleReceiverId", "ServerMultiReceiverId", "Timeout", "Timestamp", "NeedReplyNum", "Content", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -3,16 +3,38 @@ syntax = "proto3";
 option java_outer_classname = "BaseMsgProto";
 
 message BaseMsg {
+
+    // the type of msg
     int32 msg_type = 1;
-    int32 msg_id = 2;
-    int32 reply_msg_id = 3;
-    int32 sender_id = 4;
-    int32 single_receiver_id = 5;
-    repeated int32 multi_receiver_id = 6;
-    int32 single_reply_id = 7;
-    int32 single_reply_msg_id = 8;
-    int64 timeout = 9;
-    int64 timestamp = 10;
+
+    // the sequence number in sender server
+    int32 msg_sequence_number = 2;
+
+    // the uuid of msg, made up by sender server's id, sequence number and timestamp
+    int64 msg_uuid = 3;
+
+    // if this msg is a reply to any action, record the uuid of the msg needed reply
+    int64 msg_reply_uuid = 4;
+
+    // sender server id
+    int32 server_sender_id = 5;
+
+    // single receiver server id
+    int32 server_single_receiver_id = 6;
+
+    // multi receiver server id
+    repeated int32 server_multi_receiver_id = 7;
+
+    // if this msg needs timeout in reply
+    int32 timeout = 8;
+
+    // timestamp, use System.currentTimeMillis()
+    int64 timestamp = 9;
+
+    // msg reply need number
+    int32 need_reply_num = 10;
+
+    // content, maybe json
     string content = 11;
 }
 

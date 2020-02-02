@@ -1,5 +1,6 @@
 package message;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.netty.channel.Channel;
 import log.Log;
 import message.BaseMsgUtil;
@@ -11,38 +12,80 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * MessageManager 负责发送和接收消息， 每一个Server独立拥有一个MessageManager
  * 接收消息的来源为netty的channel
  * */
 public class MessageManager {
-    public BaseServer baseServer;
+    // 当前BaseServer引用
+    private BaseServer baseServer;
+    // 当前BaseServer发送的BaseMsg个数
+    private AtomicInteger msgSequenceNum;
+    // 处理发送消息的线程池
+    private ExecutorService senderExcutor;
+    // 处理接受消息的线程池
+    private ExecutorService receiveExcutor;
 
-    public HashMap<BaseMsgProto.BaseMsg,CountDownLatch> replyHelper = new HashMap<BaseMsgProto.BaseMsg,CountDownLatch>();
 
     public MessageManager(BaseServer baseServer){
         this.baseServer = baseServer;
+        this.senderExcutor = Executors.newCachedThreadPool();
+        this.receiveExcutor = Executors.newCachedThreadPool();
+        this.msgSequenceNum = new AtomicInteger(0);
+    }
+
+    /**
+     * 获取当前BaseServer的顺序增长的 msgid
+     * */
+    public synchronized Integer getMsgID(){
+        return msgSequenceNum.get() ;
     }
     /**
-     * 发送消息（不等待回复）
+     * msgId的自增
+     * */
+    public synchronized Integer addMsgID(){
+        return msgSequenceNum.getAndAdd(1);
+    }
+
+
+
+    /**
+     * @Param msg 已经封装好的待发送消息对象
+     * @Param receiver_id 被发送的节点id
+     * 发送消息，不等待回复，不关心是否成功
      * 由于在构建msg时已经可以确定消息的发送对象，故在MessageMananger中不做判断
      * */
     public void sendMsg(BaseMsgProto.BaseMsg msg,int receiver_id){
-        if(receiver_id == -1){
-            for(Channel channel : baseServer.client.channelMap.values()){
-                channel.writeAndFlush(msg);
+        // 这里其实不需要返回值
+        FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+            @Override
+            public Boolean call(){
+                try{
+                    if(receiver_id == -1){
+                        for(Channel channel : baseServer.client.channelMap.values()){
+                            channel.writeAndFlush(msg);
+                        }
+                    }else{
+                        baseServer.client.channelMap.get(receiver_id).writeAndFlush(msg);
+                    }
+                    return true;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return false;
+                }
             }
-        }else{
-            baseServer.client.channelMap.get(receiver_id).writeAndFlush(msg);
-        }
-
+        });
+        senderExcutor.submit(futureTask);
+        return;
     }
     public void sendMsg(BaseMsgProto.BaseMsg msg, List<Integer> receivers){
         for(Integer i : receivers){
             if(baseServer.client.channelMap.keySet().contains(i)){
-                baseServer.client.channelMap.get(i).writeAndFlush(msg);
+                sendMsg(msg,i);
             }
         }
     }
@@ -61,17 +104,20 @@ public class MessageManager {
      * 使用线程池优化
      * */
     public void receiveMsg(Object Msg) {
-        BaseMsgProto.BaseMsg baseMsg = (BaseMsgProto.BaseMsg) Msg;
-        int msgType = baseMsg.getMsgType();
-        Log.info(baseServer.id, "MessageManager.receiveMsg :\n" + baseMsg.toString());
+        BaseMsgProto.BaseMsg received_msg = (BaseMsgProto.BaseMsg) Msg;
+        int msgType = received_msg.getMsgType();
+        Log.info(baseServer.id, "MessageManager.receiveMsg :\n" + BaseMsgUtil.ToString(received_msg));
         switch (msgType) {
             case BaseMsgUtil.SOCKETADDRESS_ANNOUNCE: {
                 break;
             }
             case BaseMsgUtil.ECHO:{
                 BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
-                        BaseMsgUtil.ECHO_REPLY,-1,baseServer.id,baseMsg.getSenderId(),0);
-                sendMsg(msg,msg.getSingleReceiverId());
+                        BaseMsgUtil.ECHO_REPLY,baseServer.messageManager.addMsgID(),
+                        baseServer.id,
+                        received_msg.getServerSenderId(),
+                        0);
+                sendMsg(msg,msg.getServerSingleReceiverId());
                 break;
             }
             case BaseMsgUtil.VOTE:{

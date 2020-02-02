@@ -176,7 +176,10 @@ public class BaseServerClient implements Runnable{
                     //发送ECHO保活
                     for(Integer i : channelMap.keySet()){
                         BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
-                                BaseMsgUtil.ECHO,-1,baseServer.id,3000);
+                                BaseMsgUtil.ECHO,
+                                baseServer.messageManager.addMsgID(),
+                                baseServer.id,
+                                3000);
                         baseServer.messageManager.sendMsg(msg,-1);
                     }
 
