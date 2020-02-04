@@ -89,7 +89,7 @@ public class BaseServerClient implements Runnable{
     }
 
     /**
-     * 删除Inactive的Channel
+     * 删除关闭的Channel
      * */
     public void removeChannel(Channel channel){
         if(baseServer.client.channelMap.values().contains(channel)){
@@ -162,7 +162,7 @@ public class BaseServerClient implements Runnable{
         while(true){
             Log.info(this.baseServer.id,"client alive, channelMap = "+this.channelMap.toString());
             try{
-                Thread.sleep(3000);
+                Thread.sleep(10000);
                 try {
                     //按照serverMap中的记录，建立连接
                     for(Integer serverid : this.serverMap.keySet()){
@@ -174,14 +174,18 @@ public class BaseServerClient implements Runnable{
                         asyncAddServer(serverid,this.serverMap.get(serverid));
                     }
                     //发送ECHO保活
-                    for(Integer i : channelMap.keySet()){
-                        BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
-                                BaseMsgUtil.ECHO,
-                                baseServer.messageManager.addMsgID(),
-                                baseServer.id,
-                                3000);
-                        baseServer.messageManager.sendMsg(msg,-1);
+                    BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
+                            BaseMsgUtil.ECHO,
+                            baseServer.messageManager.addMsgID(),
+                            baseServer.id,
+                            -1,
+                            channelMap.keySet().size(),
+                            3000);
+                    if(baseServer.id == 1){
+                        baseServer.messageManager.sendMsgWithReply(msg,-1,10000);
                     }
+
+
 
                 } catch(Exception e) {
                     e.printStackTrace();

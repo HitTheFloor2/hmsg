@@ -40,6 +40,7 @@ public class BaseMsgUtil {
         res.append("msg_sequence_number:"+baseMsg.getMsgSequenceNumber()+"\n");
         res.append("msg_uuid:"+baseMsg.getMsgUuid()+"\n");
         res.append("msg_reply_uuid:"+baseMsg.getMsgReplyUuid()+"\n");
+        res.append("need_reply_num:"+baseMsg.getNeedReplyNum()+"\n");
         res.append("server_sender_id:"+baseMsg.getServerSenderId()+"\n");
         res.append("server_single_receiver_id:"+baseMsg.getServerSingleReceiverId()+"\n");
         res.append("server_multi_receiver_id:"+baseMsg.getServerMultiReceiverIdList().toString()+"\n");
@@ -48,31 +49,17 @@ public class BaseMsgUtil {
         res.append("msg_content:"+baseMsg.getContent().toString()+"\n");
         return res.toString();
     }
+
     /**
-     * 生成BaseMsg实例
-     * @param msgType
-     * @param msgSeqNum
-     * @param senderId
-     * @param timeout
-     * @return
+     * 生成一个默认值的BaseMsg的builder实例
      * */
-    public static synchronized BaseMsgProto.BaseMsg getInstance(
-            int  msgType , int msgSeqNum , int senderId , int timeout){
-        BaseMsgProto.BaseMsg.Builder builder =
-                BaseMsgProto.BaseMsg.newBuilder();
-        //消息类型
-        builder.setMsgType(msgType);
-        //消息序列数
-        builder.setMsgSequenceNumber(msgSeqNum);
-        //发送者id
-        builder.setServerSenderId(senderId);
-        //超时
-        builder.setTimeout(timeout);
-        BaseMsgProto.BaseMsg msg = builder.build();
-        return msg;
+    private static synchronized BaseMsgProto.BaseMsg.Builder getDefaultBuilder(){
+        BaseMsgProto.BaseMsg.Builder builder = BaseMsgProto.BaseMsg.newBuilder();
+        return builder;
     }
+
     /**
-     * 生成BaseMsg实例
+     * 生成BaseMsg实例 （建议用于发送单个消息）
      * @param msgType
      * @param msgSeqNum
      * @param senderId
@@ -81,7 +68,12 @@ public class BaseMsgUtil {
      * @return
      * */
     public static synchronized BaseMsgProto.BaseMsg getInstance(
-            int  msgType , int msgSeqNum , int senderId , int receiverId ,int timeout){
+            int msgType,
+            int msgSeqNum,
+            int senderId,
+            int receiverId,
+            int needReplyNum,
+            int timeout){
         BaseMsgProto.BaseMsg.Builder builder =
                 BaseMsgProto.BaseMsg.newBuilder();
         //消息类型
@@ -92,8 +84,53 @@ public class BaseMsgUtil {
         builder.setServerSenderId(senderId);
         //接收者id
         builder.setServerSingleReceiverId(receiverId);
+        //需要被回复的数量
+        builder.setNeedReplyNum(needReplyNum);
         //超时
         builder.setTimeout(timeout);
+        //时间戳
+        builder.setTimestamp(System.currentTimeMillis());
+        //uuid
+        builder.setMsgUuid(createBaseMsgUUID(senderId,msgSeqNum,builder.getTimestamp()));
+
+        BaseMsgProto.BaseMsg msg = builder.build();
+        return msg;
+    }
+    /**
+     * 生成BaseMsg实例 （建议用于回复单个消息）
+     * @param msgType
+     * @param msgSeqNum
+     * @param senderId
+     * @param receiverId
+     * @param timeout
+     * @return
+     * */
+    public static synchronized BaseMsgProto.BaseMsg getInstance(
+            int msgType,
+            int msgSeqNum,
+            int senderId,
+            int receiverId,
+            long replyMsgUUid,
+            int timeout){
+        BaseMsgProto.BaseMsg.Builder builder =
+                BaseMsgProto.BaseMsg.newBuilder();
+        //消息类型
+        builder.setMsgType(msgType);
+        //消息Id
+        builder.setMsgSequenceNumber(msgSeqNum);
+        //发送者id
+        builder.setServerSenderId(senderId);
+        //接收者id
+        builder.setServerSingleReceiverId(receiverId);
+        //被回复的msg的uuid
+        builder.setMsgReplyUuid(replyMsgUUid);
+        //超时
+        builder.setTimeout(timeout);
+        //时间戳
+        builder.setTimestamp(System.currentTimeMillis());
+        //uuid
+        builder.setMsgUuid(createBaseMsgUUID(senderId,msgSeqNum,builder.getTimestamp()));
+
         BaseMsgProto.BaseMsg msg = builder.build();
         return msg;
     }
@@ -107,7 +144,7 @@ public class BaseMsgUtil {
      * @param timestamp
      * @return
      * */
-    public static long createBaseMsgUUID(int server_sender_id,int msgSeqNum,int timestamp){
+    public static synchronized long createBaseMsgUUID(int server_sender_id,int msgSeqNum,long timestamp){
         //TODO 优化
         long part1 = (long)msgSeqNum;
         String temp = Long.toBinaryString(timestamp);

@@ -26,16 +26,19 @@ public class MessageManager {
     // 当前BaseServer发送的BaseMsg个数
     private AtomicInteger msgSequenceNum;
     // 处理发送消息的线程池
-    private ExecutorService senderExcutor;
+    private ExecutorService senderExecutor;
     // 处理接受消息的线程池
-    private ExecutorService receiveExcutor;
-
+    private ExecutorService receiveExecutor;
+    // 同步回复信息工具
+    BaseMsgReplyHelper baseMsgReplyHelper;
 
     public MessageManager(BaseServer baseServer){
         this.baseServer = baseServer;
-        this.senderExcutor = Executors.newCachedThreadPool();
-        this.receiveExcutor = Executors.newCachedThreadPool();
+        this.senderExecutor = Executors.newCachedThreadPool();
+        this.receiveExecutor = Executors.newCachedThreadPool();
         this.msgSequenceNum = new AtomicInteger(0);
+        this.baseMsgReplyHelper = new BaseMsgReplyHelper(baseServer);
+
     }
 
     /**
@@ -79,7 +82,7 @@ public class MessageManager {
                 }
             }
         });
-        senderExcutor.submit(futureTask);
+        senderExecutor.submit(futureTask);
         return;
     }
     public void sendMsg(BaseMsgProto.BaseMsg msg, List<Integer> receivers){
@@ -96,12 +99,29 @@ public class MessageManager {
      * 为了使得receiveMsg在收取信息之后可以获知消息之间的reply关系
      * */
     public void sendMsgWithReply(BaseMsgProto.BaseMsg msg,int receiver_id,int timeout){
+        FutureTask futureTask = new FutureTask(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                CountDownLatch senderCountDownLatch = new CountDownLatch(1);
+                baseMsgReplyHelper.registerReplyHelper(msg,senderCountDownLatch,true);
+                sendMsg(msg,receiver_id);
+                try {
+                    senderCountDownLatch.await();
+                    Log.info(baseServer.id,"msg uuid="+msg.getMsgUuid()+" reply down!");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
 
+                }
+                return null;
+            }
+        });
+        senderExecutor.submit(futureTask);
     }
     /**
      * 每一个server实例会拥有一个MessageManager，用来管理消息的收发
      * receiveMsg被netty中handler的channelRead调用，是非阻塞的
-     * 使用线程池优化
+     *
      * */
     public void receiveMsg(Object Msg) {
         BaseMsgProto.BaseMsg received_msg = (BaseMsgProto.BaseMsg) Msg;
@@ -111,13 +131,20 @@ public class MessageManager {
             case BaseMsgUtil.SOCKETADDRESS_ANNOUNCE: {
                 break;
             }
+            // 收到ECHO，回复一个ECHO_REPLY
             case BaseMsgUtil.ECHO:{
                 BaseMsgProto.BaseMsg msg = BaseMsgUtil.getInstance(
                         BaseMsgUtil.ECHO_REPLY,baseServer.messageManager.addMsgID(),
                         baseServer.id,
                         received_msg.getServerSenderId(),
+                        received_msg.getMsgUuid(),
                         0);
                 sendMsg(msg,msg.getServerSingleReceiverId());
+                break;
+            }
+            // 收到ECHO的回复，解除发送端的等待
+            case BaseMsgUtil.ECHO_REPLY:{
+                baseMsgReplyHelper.replyNotify(received_msg.getMsgReplyUuid(),received_msg.getMsgUuid());
                 break;
             }
             case BaseMsgUtil.VOTE:{

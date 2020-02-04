@@ -13,20 +13,20 @@ public class Main {
         InetSocketAddress local = null;
 
         ConfigManager.init();
-        ConfigManager.setDebug(true);
 
 
 
         if(ConfigManager.debug){
             BaseServer baseServer8080 = new BaseServer(1,"127.0.0.1",8080);
             try {
-                Thread.sleep(10000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             BaseServer baseServer8081 = new BaseServer(2,"127.0.0.1",8081);
-            //TestServer testServer8082 = new TestServer(3,"127.0.0.1",8082);
-            //TestServer testServer8083 = new TestServer(4,"127.0.0.1",8083);
+            BaseServer baseServer8082 = new BaseServer(3,"127.0.0.1",8082);
+            BaseServer baseServer8083 = new BaseServer(4,"127.0.0.1",8083);
+
         }
         else{
             //1 192.168.0.100 8080

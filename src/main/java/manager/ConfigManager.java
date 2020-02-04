@@ -23,7 +23,7 @@ public class ConfigManager {
     //测试用，读取的是不同的config
     public static HashMap<Integer,InetSocketAddress> serverMapTest = new HashMap<>();
 
-    public static void setServerid(int id){
+    public static void setServerId(int id){
         serverid = id;
     }
     public static void setDebug(boolean d){
@@ -35,8 +35,7 @@ public class ConfigManager {
     public static void init(){
         initConfig();
         initServers();
-
-        Log.logger.info("ConfigManager.init complete: localhost="+local.toString()+" serverid="+serverid+" serverMap="+
+        Log.info(serverid,"ConfigManager.init complete: localhost="+local.toString()+" serverid="+serverid+" serverMap="+
                 serverMap.toString());
     }
     /**
@@ -45,12 +44,12 @@ public class ConfigManager {
     public static void initConfig(){
         try{
             properties.load(new FileInputStream(path+"/config/config.properties"));
+            // 按行读取配置
+            debug = Boolean.valueOf(properties.getProperty("debug"));
             serverid = Integer.decode(properties.getProperty("id"));
             String ip = properties.getProperty("ip");
             int port = Integer.decode(properties.getProperty("port"));
             setLocal(ip,port);
-
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -70,7 +69,9 @@ public class ConfigManager {
                 String[] vs = value.split(":");
                 serverMap.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
             }
-
+            if(debug == false){
+                return;
+            }
             prop = new Properties();
             prop.load(new FileInputStream(path+"/config/servers_test.properties"));
             for(String key: prop.stringPropertyNames()){
