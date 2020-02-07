@@ -14,8 +14,10 @@ import log.Log;
 import message.BaseMsgUtil;
 import protobuf.BaseMsgProto;
 import manager.ConfigManager;
+import util.MapUtil;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 /**
  * BaseServerClient作为BaseServer的成员对象，用于和其他集群中的Server建立Channel
@@ -65,6 +67,8 @@ public class BaseServerClient implements Runnable{
 
     /**
      * 异步添加Server，只有连接成功的channel被放入channelMap
+     * @param id 目标BaseServer的id
+     * @param inetSocketAddress 目标BaseServer的inetSocketAddress
      * */
     public void asyncAddServer(int id, InetSocketAddress inetSocketAddress){
         if(channelMap.keySet().contains(id)){
@@ -93,9 +97,13 @@ public class BaseServerClient implements Runnable{
      * */
     public void removeChannel(Channel channel){
         if(baseServer.client.channelMap.values().contains(channel)){
-            baseServer.client.channelMap.remove(channel);
-            Log.info(baseServer.id,"BaseServerClientHandler: channel "+channel.toString()+
-                    " is inactive, remove it!");
+            for(Map.Entry entry : baseServer.client.channelMap.entrySet()){
+                if(entry.getValue().equals(channel)){
+                    baseServer.client.channelMap.remove(entry.getKey());
+                    Log.info(baseServer.id,"BaseServerClientHandler: channel "+channel.toString()+
+                            " is inactive, remove it!");
+                }
+            }
         }
     }
     /**
