@@ -31,10 +31,10 @@ public final class BaseMsgProto {
      * the sequence number in sender server
      * </pre>
      *
-     * <code>int32 msg_sequence_number = 2;</code>
+     * <code>int64 msg_sequence_number = 2;</code>
      * @return The msgSequenceNumber.
      */
-    int getMsgSequenceNumber();
+    long getMsgSequenceNumber();
 
     /**
      * <pre>
@@ -58,52 +58,84 @@ public final class BaseMsgProto {
 
     /**
      * <pre>
-     * sender server id
+     * sender server address(address = ip:host)
      * </pre>
      *
-     * <code>int32 server_sender_id = 5;</code>
-     * @return The serverSenderId.
+     * <code>string server_sender_address = 5;</code>
+     * @return The serverSenderAddress.
      */
-    int getServerSenderId();
+    java.lang.String getServerSenderAddress();
+    /**
+     * <pre>
+     * sender server address(address = ip:host)
+     * </pre>
+     *
+     * <code>string server_sender_address = 5;</code>
+     * @return The bytes for serverSenderAddress.
+     */
+    com.google.protobuf.ByteString
+        getServerSenderAddressBytes();
 
     /**
      * <pre>
-     * single receiver server id
+     * single receiver server address
      * </pre>
      *
-     * <code>int32 server_single_receiver_id = 6;</code>
-     * @return The serverSingleReceiverId.
+     * <code>string server_single_receiver_address = 6;</code>
+     * @return The serverSingleReceiverAddress.
      */
-    int getServerSingleReceiverId();
+    java.lang.String getServerSingleReceiverAddress();
+    /**
+     * <pre>
+     * single receiver server address
+     * </pre>
+     *
+     * <code>string server_single_receiver_address = 6;</code>
+     * @return The bytes for serverSingleReceiverAddress.
+     */
+    com.google.protobuf.ByteString
+        getServerSingleReceiverAddressBytes();
 
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
-     * @return A list containing the serverMultiReceiverId.
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @return A list containing the serverMultiReceiverAddress.
      */
-    java.util.List<java.lang.Integer> getServerMultiReceiverIdList();
+    java.util.List<java.lang.String>
+        getServerMultiReceiverAddressList();
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
-     * @return The count of serverMultiReceiverId.
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @return The count of serverMultiReceiverAddress.
      */
-    int getServerMultiReceiverIdCount();
+    int getServerMultiReceiverAddressCount();
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * <code>repeated string server_multi_receiver_address = 7;</code>
      * @param index The index of the element to return.
-     * @return The serverMultiReceiverId at the given index.
+     * @return The serverMultiReceiverAddress at the given index.
      */
-    int getServerMultiReceiverId(int index);
+    java.lang.String getServerMultiReceiverAddress(int index);
+    /**
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the serverMultiReceiverAddress at the given index.
+     */
+    com.google.protobuf.ByteString
+        getServerMultiReceiverAddressBytes(int index);
 
     /**
      * <pre>
@@ -168,7 +200,9 @@ public final class BaseMsgProto {
       super(builder);
     }
     private BaseMsg() {
-      serverMultiReceiverId_ = emptyIntList();
+      serverSenderAddress_ = "";
+      serverSingleReceiverAddress_ = "";
+      serverMultiReceiverAddress_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       content_ = "";
     }
 
@@ -210,7 +244,7 @@ public final class BaseMsgProto {
             }
             case 16: {
 
-              msgSequenceNumber_ = input.readInt32();
+              msgSequenceNumber_ = input.readInt64();
               break;
             }
             case 24: {
@@ -223,35 +257,25 @@ public final class BaseMsgProto {
               msgReplyUuid_ = input.readInt64();
               break;
             }
-            case 40: {
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              serverSenderId_ = input.readInt32();
+              serverSenderAddress_ = s;
               break;
             }
-            case 48: {
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              serverSingleReceiverId_ = input.readInt32();
-              break;
-            }
-            case 56: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                serverMultiReceiverId_ = newIntList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              serverMultiReceiverId_.addInt(input.readInt32());
+              serverSingleReceiverAddress_ = s;
               break;
             }
             case 58: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-                serverMultiReceiverId_ = newIntList();
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                serverMultiReceiverAddress_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000001;
               }
-              while (input.getBytesUntilLimit() > 0) {
-                serverMultiReceiverId_.addInt(input.readInt32());
-              }
-              input.popLimit(limit);
+              serverMultiReceiverAddress_.add(s);
               break;
             }
             case 64: {
@@ -291,7 +315,7 @@ public final class BaseMsgProto {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          serverMultiReceiverId_.makeImmutable(); // C
+          serverMultiReceiverAddress_ = serverMultiReceiverAddress_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -325,16 +349,16 @@ public final class BaseMsgProto {
     }
 
     public static final int MSG_SEQUENCE_NUMBER_FIELD_NUMBER = 2;
-    private int msgSequenceNumber_;
+    private long msgSequenceNumber_;
     /**
      * <pre>
      * the sequence number in sender server
      * </pre>
      *
-     * <code>int32 msg_sequence_number = 2;</code>
+     * <code>int64 msg_sequence_number = 2;</code>
      * @return The msgSequenceNumber.
      */
-    public int getMsgSequenceNumber() {
+    public long getMsgSequenceNumber() {
       return msgSequenceNumber_;
     }
 
@@ -366,72 +390,144 @@ public final class BaseMsgProto {
       return msgReplyUuid_;
     }
 
-    public static final int SERVER_SENDER_ID_FIELD_NUMBER = 5;
-    private int serverSenderId_;
+    public static final int SERVER_SENDER_ADDRESS_FIELD_NUMBER = 5;
+    private volatile java.lang.Object serverSenderAddress_;
     /**
      * <pre>
-     * sender server id
+     * sender server address(address = ip:host)
      * </pre>
      *
-     * <code>int32 server_sender_id = 5;</code>
-     * @return The serverSenderId.
+     * <code>string server_sender_address = 5;</code>
+     * @return The serverSenderAddress.
      */
-    public int getServerSenderId() {
-      return serverSenderId_;
+    public java.lang.String getServerSenderAddress() {
+      java.lang.Object ref = serverSenderAddress_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        serverSenderAddress_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * sender server address(address = ip:host)
+     * </pre>
+     *
+     * <code>string server_sender_address = 5;</code>
+     * @return The bytes for serverSenderAddress.
+     */
+    public com.google.protobuf.ByteString
+        getServerSenderAddressBytes() {
+      java.lang.Object ref = serverSenderAddress_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        serverSenderAddress_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    public static final int SERVER_SINGLE_RECEIVER_ID_FIELD_NUMBER = 6;
-    private int serverSingleReceiverId_;
+    public static final int SERVER_SINGLE_RECEIVER_ADDRESS_FIELD_NUMBER = 6;
+    private volatile java.lang.Object serverSingleReceiverAddress_;
     /**
      * <pre>
-     * single receiver server id
+     * single receiver server address
      * </pre>
      *
-     * <code>int32 server_single_receiver_id = 6;</code>
-     * @return The serverSingleReceiverId.
+     * <code>string server_single_receiver_address = 6;</code>
+     * @return The serverSingleReceiverAddress.
      */
-    public int getServerSingleReceiverId() {
-      return serverSingleReceiverId_;
+    public java.lang.String getServerSingleReceiverAddress() {
+      java.lang.Object ref = serverSingleReceiverAddress_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        serverSingleReceiverAddress_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * single receiver server address
+     * </pre>
+     *
+     * <code>string server_single_receiver_address = 6;</code>
+     * @return The bytes for serverSingleReceiverAddress.
+     */
+    public com.google.protobuf.ByteString
+        getServerSingleReceiverAddressBytes() {
+      java.lang.Object ref = serverSingleReceiverAddress_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        serverSingleReceiverAddress_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    public static final int SERVER_MULTI_RECEIVER_ID_FIELD_NUMBER = 7;
-    private com.google.protobuf.Internal.IntList serverMultiReceiverId_;
+    public static final int SERVER_MULTI_RECEIVER_ADDRESS_FIELD_NUMBER = 7;
+    private com.google.protobuf.LazyStringList serverMultiReceiverAddress_;
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
-     * @return A list containing the serverMultiReceiverId.
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @return A list containing the serverMultiReceiverAddress.
      */
-    public java.util.List<java.lang.Integer>
-        getServerMultiReceiverIdList() {
-      return serverMultiReceiverId_;
+    public com.google.protobuf.ProtocolStringList
+        getServerMultiReceiverAddressList() {
+      return serverMultiReceiverAddress_;
     }
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
-     * @return The count of serverMultiReceiverId.
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @return The count of serverMultiReceiverAddress.
      */
-    public int getServerMultiReceiverIdCount() {
-      return serverMultiReceiverId_.size();
+    public int getServerMultiReceiverAddressCount() {
+      return serverMultiReceiverAddress_.size();
     }
     /**
      * <pre>
      * multi receiver server id
      * </pre>
      *
-     * <code>repeated int32 server_multi_receiver_id = 7;</code>
+     * <code>repeated string server_multi_receiver_address = 7;</code>
      * @param index The index of the element to return.
-     * @return The serverMultiReceiverId at the given index.
+     * @return The serverMultiReceiverAddress at the given index.
      */
-    public int getServerMultiReceiverId(int index) {
-      return serverMultiReceiverId_.getInt(index);
+    public java.lang.String getServerMultiReceiverAddress(int index) {
+      return serverMultiReceiverAddress_.get(index);
     }
-    private int serverMultiReceiverIdMemoizedSerializedSize = -1;
+    /**
+     * <pre>
+     * multi receiver server id
+     * </pre>
+     *
+     * <code>repeated string server_multi_receiver_address = 7;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the serverMultiReceiverAddress at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getServerMultiReceiverAddressBytes(int index) {
+      return serverMultiReceiverAddress_.getByteString(index);
+    }
 
     public static final int TIMEOUT_FIELD_NUMBER = 8;
     private int timeout_;
@@ -533,12 +629,11 @@ public final class BaseMsgProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      getSerializedSize();
       if (msgType_ != 0) {
         output.writeInt32(1, msgType_);
       }
-      if (msgSequenceNumber_ != 0) {
-        output.writeInt32(2, msgSequenceNumber_);
+      if (msgSequenceNumber_ != 0L) {
+        output.writeInt64(2, msgSequenceNumber_);
       }
       if (msgUuid_ != 0L) {
         output.writeInt64(3, msgUuid_);
@@ -546,18 +641,14 @@ public final class BaseMsgProto {
       if (msgReplyUuid_ != 0L) {
         output.writeInt64(4, msgReplyUuid_);
       }
-      if (serverSenderId_ != 0) {
-        output.writeInt32(5, serverSenderId_);
+      if (!getServerSenderAddressBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, serverSenderAddress_);
       }
-      if (serverSingleReceiverId_ != 0) {
-        output.writeInt32(6, serverSingleReceiverId_);
+      if (!getServerSingleReceiverAddressBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, serverSingleReceiverAddress_);
       }
-      if (getServerMultiReceiverIdList().size() > 0) {
-        output.writeUInt32NoTag(58);
-        output.writeUInt32NoTag(serverMultiReceiverIdMemoizedSerializedSize);
-      }
-      for (int i = 0; i < serverMultiReceiverId_.size(); i++) {
-        output.writeInt32NoTag(serverMultiReceiverId_.getInt(i));
+      for (int i = 0; i < serverMultiReceiverAddress_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, serverMultiReceiverAddress_.getRaw(i));
       }
       if (timeout_ != 0) {
         output.writeInt32(8, timeout_);
@@ -584,9 +675,9 @@ public final class BaseMsgProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, msgType_);
       }
-      if (msgSequenceNumber_ != 0) {
+      if (msgSequenceNumber_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, msgSequenceNumber_);
+          .computeInt64Size(2, msgSequenceNumber_);
       }
       if (msgUuid_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
@@ -596,27 +687,19 @@ public final class BaseMsgProto {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(4, msgReplyUuid_);
       }
-      if (serverSenderId_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, serverSenderId_);
+      if (!getServerSenderAddressBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, serverSenderAddress_);
       }
-      if (serverSingleReceiverId_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(6, serverSingleReceiverId_);
+      if (!getServerSingleReceiverAddressBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, serverSingleReceiverAddress_);
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < serverMultiReceiverId_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(serverMultiReceiverId_.getInt(i));
+        for (int i = 0; i < serverMultiReceiverAddress_.size(); i++) {
+          dataSize += computeStringSizeNoTag(serverMultiReceiverAddress_.getRaw(i));
         }
         size += dataSize;
-        if (!getServerMultiReceiverIdList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        serverMultiReceiverIdMemoizedSerializedSize = dataSize;
+        size += 1 * getServerMultiReceiverAddressList().size();
       }
       if (timeout_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -656,12 +739,12 @@ public final class BaseMsgProto {
           != other.getMsgUuid()) return false;
       if (getMsgReplyUuid()
           != other.getMsgReplyUuid()) return false;
-      if (getServerSenderId()
-          != other.getServerSenderId()) return false;
-      if (getServerSingleReceiverId()
-          != other.getServerSingleReceiverId()) return false;
-      if (!getServerMultiReceiverIdList()
-          .equals(other.getServerMultiReceiverIdList())) return false;
+      if (!getServerSenderAddress()
+          .equals(other.getServerSenderAddress())) return false;
+      if (!getServerSingleReceiverAddress()
+          .equals(other.getServerSingleReceiverAddress())) return false;
+      if (!getServerMultiReceiverAddressList()
+          .equals(other.getServerMultiReceiverAddressList())) return false;
       if (getTimeout()
           != other.getTimeout()) return false;
       if (getTimestamp()
@@ -684,20 +767,21 @@ public final class BaseMsgProto {
       hash = (37 * hash) + MSG_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + getMsgType();
       hash = (37 * hash) + MSG_SEQUENCE_NUMBER_FIELD_NUMBER;
-      hash = (53 * hash) + getMsgSequenceNumber();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMsgSequenceNumber());
       hash = (37 * hash) + MSG_UUID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getMsgUuid());
       hash = (37 * hash) + MSG_REPLY_UUID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getMsgReplyUuid());
-      hash = (37 * hash) + SERVER_SENDER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getServerSenderId();
-      hash = (37 * hash) + SERVER_SINGLE_RECEIVER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getServerSingleReceiverId();
-      if (getServerMultiReceiverIdCount() > 0) {
-        hash = (37 * hash) + SERVER_MULTI_RECEIVER_ID_FIELD_NUMBER;
-        hash = (53 * hash) + getServerMultiReceiverIdList().hashCode();
+      hash = (37 * hash) + SERVER_SENDER_ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getServerSenderAddress().hashCode();
+      hash = (37 * hash) + SERVER_SINGLE_RECEIVER_ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getServerSingleReceiverAddress().hashCode();
+      if (getServerMultiReceiverAddressCount() > 0) {
+        hash = (37 * hash) + SERVER_MULTI_RECEIVER_ADDRESS_FIELD_NUMBER;
+        hash = (53 * hash) + getServerMultiReceiverAddressList().hashCode();
       }
       hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
       hash = (53 * hash) + getTimeout();
@@ -843,17 +927,17 @@ public final class BaseMsgProto {
         super.clear();
         msgType_ = 0;
 
-        msgSequenceNumber_ = 0;
+        msgSequenceNumber_ = 0L;
 
         msgUuid_ = 0L;
 
         msgReplyUuid_ = 0L;
 
-        serverSenderId_ = 0;
+        serverSenderAddress_ = "";
 
-        serverSingleReceiverId_ = 0;
+        serverSingleReceiverAddress_ = "";
 
-        serverMultiReceiverId_ = emptyIntList();
+        serverMultiReceiverAddress_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
         timeout_ = 0;
 
@@ -894,13 +978,13 @@ public final class BaseMsgProto {
         result.msgSequenceNumber_ = msgSequenceNumber_;
         result.msgUuid_ = msgUuid_;
         result.msgReplyUuid_ = msgReplyUuid_;
-        result.serverSenderId_ = serverSenderId_;
-        result.serverSingleReceiverId_ = serverSingleReceiverId_;
+        result.serverSenderAddress_ = serverSenderAddress_;
+        result.serverSingleReceiverAddress_ = serverSingleReceiverAddress_;
         if (((bitField0_ & 0x00000001) != 0)) {
-          serverMultiReceiverId_.makeImmutable();
+          serverMultiReceiverAddress_ = serverMultiReceiverAddress_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.serverMultiReceiverId_ = serverMultiReceiverId_;
+        result.serverMultiReceiverAddress_ = serverMultiReceiverAddress_;
         result.timeout_ = timeout_;
         result.timestamp_ = timestamp_;
         result.needReplyNum_ = needReplyNum_;
@@ -956,7 +1040,7 @@ public final class BaseMsgProto {
         if (other.getMsgType() != 0) {
           setMsgType(other.getMsgType());
         }
-        if (other.getMsgSequenceNumber() != 0) {
+        if (other.getMsgSequenceNumber() != 0L) {
           setMsgSequenceNumber(other.getMsgSequenceNumber());
         }
         if (other.getMsgUuid() != 0L) {
@@ -965,19 +1049,21 @@ public final class BaseMsgProto {
         if (other.getMsgReplyUuid() != 0L) {
           setMsgReplyUuid(other.getMsgReplyUuid());
         }
-        if (other.getServerSenderId() != 0) {
-          setServerSenderId(other.getServerSenderId());
+        if (!other.getServerSenderAddress().isEmpty()) {
+          serverSenderAddress_ = other.serverSenderAddress_;
+          onChanged();
         }
-        if (other.getServerSingleReceiverId() != 0) {
-          setServerSingleReceiverId(other.getServerSingleReceiverId());
+        if (!other.getServerSingleReceiverAddress().isEmpty()) {
+          serverSingleReceiverAddress_ = other.serverSingleReceiverAddress_;
+          onChanged();
         }
-        if (!other.serverMultiReceiverId_.isEmpty()) {
-          if (serverMultiReceiverId_.isEmpty()) {
-            serverMultiReceiverId_ = other.serverMultiReceiverId_;
+        if (!other.serverMultiReceiverAddress_.isEmpty()) {
+          if (serverMultiReceiverAddress_.isEmpty()) {
+            serverMultiReceiverAddress_ = other.serverMultiReceiverAddress_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureServerMultiReceiverIdIsMutable();
-            serverMultiReceiverId_.addAll(other.serverMultiReceiverId_);
+            ensureServerMultiReceiverAddressIsMutable();
+            serverMultiReceiverAddress_.addAll(other.serverMultiReceiverAddress_);
           }
           onChanged();
         }
@@ -1066,16 +1152,16 @@ public final class BaseMsgProto {
         return this;
       }
 
-      private int msgSequenceNumber_ ;
+      private long msgSequenceNumber_ ;
       /**
        * <pre>
        * the sequence number in sender server
        * </pre>
        *
-       * <code>int32 msg_sequence_number = 2;</code>
+       * <code>int64 msg_sequence_number = 2;</code>
        * @return The msgSequenceNumber.
        */
-      public int getMsgSequenceNumber() {
+      public long getMsgSequenceNumber() {
         return msgSequenceNumber_;
       }
       /**
@@ -1083,11 +1169,11 @@ public final class BaseMsgProto {
        * the sequence number in sender server
        * </pre>
        *
-       * <code>int32 msg_sequence_number = 2;</code>
+       * <code>int64 msg_sequence_number = 2;</code>
        * @param value The msgSequenceNumber to set.
        * @return This builder for chaining.
        */
-      public Builder setMsgSequenceNumber(int value) {
+      public Builder setMsgSequenceNumber(long value) {
         
         msgSequenceNumber_ = value;
         onChanged();
@@ -1098,12 +1184,12 @@ public final class BaseMsgProto {
        * the sequence number in sender server
        * </pre>
        *
-       * <code>int32 msg_sequence_number = 2;</code>
+       * <code>int64 msg_sequence_number = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearMsgSequenceNumber() {
         
-        msgSequenceNumber_ = 0;
+        msgSequenceNumber_ = 0L;
         onChanged();
         return this;
       }
@@ -1192,94 +1278,202 @@ public final class BaseMsgProto {
         return this;
       }
 
-      private int serverSenderId_ ;
+      private java.lang.Object serverSenderAddress_ = "";
       /**
        * <pre>
-       * sender server id
+       * sender server address(address = ip:host)
        * </pre>
        *
-       * <code>int32 server_sender_id = 5;</code>
-       * @return The serverSenderId.
+       * <code>string server_sender_address = 5;</code>
+       * @return The serverSenderAddress.
        */
-      public int getServerSenderId() {
-        return serverSenderId_;
+      public java.lang.String getServerSenderAddress() {
+        java.lang.Object ref = serverSenderAddress_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          serverSenderAddress_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       * sender server id
+       * sender server address(address = ip:host)
        * </pre>
        *
-       * <code>int32 server_sender_id = 5;</code>
-       * @param value The serverSenderId to set.
+       * <code>string server_sender_address = 5;</code>
+       * @return The bytes for serverSenderAddress.
+       */
+      public com.google.protobuf.ByteString
+          getServerSenderAddressBytes() {
+        java.lang.Object ref = serverSenderAddress_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          serverSenderAddress_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * sender server address(address = ip:host)
+       * </pre>
+       *
+       * <code>string server_sender_address = 5;</code>
+       * @param value The serverSenderAddress to set.
        * @return This builder for chaining.
        */
-      public Builder setServerSenderId(int value) {
-        
-        serverSenderId_ = value;
+      public Builder setServerSenderAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        serverSenderAddress_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * sender server id
+       * sender server address(address = ip:host)
        * </pre>
        *
-       * <code>int32 server_sender_id = 5;</code>
+       * <code>string server_sender_address = 5;</code>
        * @return This builder for chaining.
        */
-      public Builder clearServerSenderId() {
+      public Builder clearServerSenderAddress() {
         
-        serverSenderId_ = 0;
+        serverSenderAddress_ = getDefaultInstance().getServerSenderAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * sender server address(address = ip:host)
+       * </pre>
+       *
+       * <code>string server_sender_address = 5;</code>
+       * @param value The bytes for serverSenderAddress to set.
+       * @return This builder for chaining.
+       */
+      public Builder setServerSenderAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        serverSenderAddress_ = value;
         onChanged();
         return this;
       }
 
-      private int serverSingleReceiverId_ ;
+      private java.lang.Object serverSingleReceiverAddress_ = "";
       /**
        * <pre>
-       * single receiver server id
+       * single receiver server address
        * </pre>
        *
-       * <code>int32 server_single_receiver_id = 6;</code>
-       * @return The serverSingleReceiverId.
+       * <code>string server_single_receiver_address = 6;</code>
+       * @return The serverSingleReceiverAddress.
        */
-      public int getServerSingleReceiverId() {
-        return serverSingleReceiverId_;
+      public java.lang.String getServerSingleReceiverAddress() {
+        java.lang.Object ref = serverSingleReceiverAddress_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          serverSingleReceiverAddress_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       * single receiver server id
+       * single receiver server address
        * </pre>
        *
-       * <code>int32 server_single_receiver_id = 6;</code>
-       * @param value The serverSingleReceiverId to set.
+       * <code>string server_single_receiver_address = 6;</code>
+       * @return The bytes for serverSingleReceiverAddress.
+       */
+      public com.google.protobuf.ByteString
+          getServerSingleReceiverAddressBytes() {
+        java.lang.Object ref = serverSingleReceiverAddress_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          serverSingleReceiverAddress_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * single receiver server address
+       * </pre>
+       *
+       * <code>string server_single_receiver_address = 6;</code>
+       * @param value The serverSingleReceiverAddress to set.
        * @return This builder for chaining.
        */
-      public Builder setServerSingleReceiverId(int value) {
-        
-        serverSingleReceiverId_ = value;
+      public Builder setServerSingleReceiverAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        serverSingleReceiverAddress_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * single receiver server id
+       * single receiver server address
        * </pre>
        *
-       * <code>int32 server_single_receiver_id = 6;</code>
+       * <code>string server_single_receiver_address = 6;</code>
        * @return This builder for chaining.
        */
-      public Builder clearServerSingleReceiverId() {
+      public Builder clearServerSingleReceiverAddress() {
         
-        serverSingleReceiverId_ = 0;
+        serverSingleReceiverAddress_ = getDefaultInstance().getServerSingleReceiverAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * single receiver server address
+       * </pre>
+       *
+       * <code>string server_single_receiver_address = 6;</code>
+       * @param value The bytes for serverSingleReceiverAddress to set.
+       * @return This builder for chaining.
+       */
+      public Builder setServerSingleReceiverAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        serverSingleReceiverAddress_ = value;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.Internal.IntList serverMultiReceiverId_ = emptyIntList();
-      private void ensureServerMultiReceiverIdIsMutable() {
+      private com.google.protobuf.LazyStringList serverMultiReceiverAddress_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureServerMultiReceiverAddressIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          serverMultiReceiverId_ = mutableCopy(serverMultiReceiverId_);
+          serverMultiReceiverAddress_ = new com.google.protobuf.LazyStringArrayList(serverMultiReceiverAddress_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -1288,51 +1482,66 @@ public final class BaseMsgProto {
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
-       * @return A list containing the serverMultiReceiverId.
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @return A list containing the serverMultiReceiverAddress.
        */
-      public java.util.List<java.lang.Integer>
-          getServerMultiReceiverIdList() {
-        return ((bitField0_ & 0x00000001) != 0) ?
-                 java.util.Collections.unmodifiableList(serverMultiReceiverId_) : serverMultiReceiverId_;
+      public com.google.protobuf.ProtocolStringList
+          getServerMultiReceiverAddressList() {
+        return serverMultiReceiverAddress_.getUnmodifiableView();
       }
       /**
        * <pre>
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
-       * @return The count of serverMultiReceiverId.
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @return The count of serverMultiReceiverAddress.
        */
-      public int getServerMultiReceiverIdCount() {
-        return serverMultiReceiverId_.size();
+      public int getServerMultiReceiverAddressCount() {
+        return serverMultiReceiverAddress_.size();
       }
       /**
        * <pre>
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * <code>repeated string server_multi_receiver_address = 7;</code>
        * @param index The index of the element to return.
-       * @return The serverMultiReceiverId at the given index.
+       * @return The serverMultiReceiverAddress at the given index.
        */
-      public int getServerMultiReceiverId(int index) {
-        return serverMultiReceiverId_.getInt(index);
+      public java.lang.String getServerMultiReceiverAddress(int index) {
+        return serverMultiReceiverAddress_.get(index);
       }
       /**
        * <pre>
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the serverMultiReceiverAddress at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getServerMultiReceiverAddressBytes(int index) {
+        return serverMultiReceiverAddress_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated string server_multi_receiver_address = 7;</code>
        * @param index The index to set the value at.
-       * @param value The serverMultiReceiverId to set.
+       * @param value The serverMultiReceiverAddress to set.
        * @return This builder for chaining.
        */
-      public Builder setServerMultiReceiverId(
-          int index, int value) {
-        ensureServerMultiReceiverIdIsMutable();
-        serverMultiReceiverId_.setInt(index, value);
+      public Builder setServerMultiReceiverAddress(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureServerMultiReceiverAddressIsMutable();
+        serverMultiReceiverAddress_.set(index, value);
         onChanged();
         return this;
       }
@@ -1341,13 +1550,17 @@ public final class BaseMsgProto {
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
-       * @param value The serverMultiReceiverId to add.
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @param value The serverMultiReceiverAddress to add.
        * @return This builder for chaining.
        */
-      public Builder addServerMultiReceiverId(int value) {
-        ensureServerMultiReceiverIdIsMutable();
-        serverMultiReceiverId_.addInt(value);
+      public Builder addServerMultiReceiverAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureServerMultiReceiverAddressIsMutable();
+        serverMultiReceiverAddress_.add(value);
         onChanged();
         return this;
       }
@@ -1356,15 +1569,15 @@ public final class BaseMsgProto {
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
-       * @param values The serverMultiReceiverId to add.
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @param values The serverMultiReceiverAddress to add.
        * @return This builder for chaining.
        */
-      public Builder addAllServerMultiReceiverId(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureServerMultiReceiverIdIsMutable();
+      public Builder addAllServerMultiReceiverAddress(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureServerMultiReceiverAddressIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, serverMultiReceiverId_);
+            values, serverMultiReceiverAddress_);
         onChanged();
         return this;
       }
@@ -1373,12 +1586,32 @@ public final class BaseMsgProto {
        * multi receiver server id
        * </pre>
        *
-       * <code>repeated int32 server_multi_receiver_id = 7;</code>
+       * <code>repeated string server_multi_receiver_address = 7;</code>
        * @return This builder for chaining.
        */
-      public Builder clearServerMultiReceiverId() {
-        serverMultiReceiverId_ = emptyIntList();
+      public Builder clearServerMultiReceiverAddress() {
+        serverMultiReceiverAddress_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * multi receiver server id
+       * </pre>
+       *
+       * <code>repeated string server_multi_receiver_address = 7;</code>
+       * @param value The bytes of the serverMultiReceiverAddress to add.
+       * @return This builder for chaining.
+       */
+      public Builder addServerMultiReceiverAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureServerMultiReceiverAddressIsMutable();
+        serverMultiReceiverAddress_.add(value);
         onChanged();
         return this;
       }
@@ -1671,14 +1904,15 @@ public final class BaseMsgProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rBaseMsg.proto\"\216\002\n\007BaseMsg\022\020\n\010msg_type\030" +
-      "\001 \001(\005\022\033\n\023msg_sequence_number\030\002 \001(\005\022\020\n\010ms" +
-      "g_uuid\030\003 \001(\003\022\026\n\016msg_reply_uuid\030\004 \001(\003\022\030\n\020" +
-      "server_sender_id\030\005 \001(\005\022!\n\031server_single_" +
-      "receiver_id\030\006 \001(\005\022 \n\030server_multi_receiv" +
-      "er_id\030\007 \003(\005\022\017\n\007timeout\030\010 \001(\005\022\021\n\ttimestam" +
-      "p\030\t \001(\003\022\026\n\016need_reply_num\030\n \001(\005\022\017\n\007conte" +
-      "nt\030\013 \001(\tB\016B\014BaseMsgProtob\006proto3"
+      "\n\rBaseMsg.proto\"\235\002\n\007BaseMsg\022\020\n\010msg_type\030" +
+      "\001 \001(\005\022\033\n\023msg_sequence_number\030\002 \001(\003\022\020\n\010ms" +
+      "g_uuid\030\003 \001(\003\022\026\n\016msg_reply_uuid\030\004 \001(\003\022\035\n\025" +
+      "server_sender_address\030\005 \001(\t\022&\n\036server_si" +
+      "ngle_receiver_address\030\006 \001(\t\022%\n\035server_mu" +
+      "lti_receiver_address\030\007 \003(\t\022\017\n\007timeout\030\010 " +
+      "\001(\005\022\021\n\ttimestamp\030\t \001(\003\022\026\n\016need_reply_num" +
+      "\030\n \001(\005\022\017\n\007content\030\013 \001(\tB\016B\014BaseMsgProtob" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1689,7 +1923,7 @@ public final class BaseMsgProto {
     internal_static_BaseMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BaseMsg_descriptor,
-        new java.lang.String[] { "MsgType", "MsgSequenceNumber", "MsgUuid", "MsgReplyUuid", "ServerSenderId", "ServerSingleReceiverId", "ServerMultiReceiverId", "Timeout", "Timestamp", "NeedReplyNum", "Content", });
+        new java.lang.String[] { "MsgType", "MsgSequenceNumber", "MsgUuid", "MsgReplyUuid", "ServerSenderAddress", "ServerSingleReceiverAddress", "ServerMultiReceiverAddress", "Timeout", "Timestamp", "NeedReplyNum", "Content", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

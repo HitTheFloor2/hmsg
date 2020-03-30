@@ -4,6 +4,7 @@ import log.Log;
 
 import java.io.FileInputStream;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -14,17 +15,17 @@ public class ConfigManager {
     public static String path = System.getProperty("user.dir");
     public static Properties properties = new Properties();
 
-
+    public static String name = "Default";
     public static boolean debug = false;
-    public static Integer serverid = -1;
+    public static String address = "";
     public static InetSocketAddress local = null;
     public static HashMap<String,Object> propertiesMap = new HashMap<>();
-    public static HashMap<Integer,InetSocketAddress> serverMap = new HashMap<>();
+    public static ArrayList<String> serverList = new ArrayList<>();
     //测试用，读取的是不同的config
-    public static HashMap<Integer,InetSocketAddress> serverMapTest = new HashMap<>();
+    public static ArrayList<String> serverTestList = new ArrayList<>();
 
-    public static void setServerId(int id){
-        serverid = id;
+    public static void setServerAddress(String _address){
+        address = _address;
     }
     public static void setDebug(boolean d){
         debug = d;
@@ -35,8 +36,10 @@ public class ConfigManager {
     public static void init(){
         initConfig();
         initServers();
-        Log.info(serverid,"ConfigManager.init complete: localhost="+local.toString()+" serverid="+serverid+" serverMap="+
-                serverMap.toString());
+        Log.info(address,"ConfigManager.init complete: localhost="+local.toString()+
+                " debug="+debug+
+                " serverMap="+ serverList.toString()
+        );
     }
     /**
      * read config.properties
@@ -46,10 +49,11 @@ public class ConfigManager {
             properties.load(new FileInputStream(path+"/config/config.properties"));
             // 按行读取配置
             debug = Boolean.valueOf(properties.getProperty("debug"));
-            serverid = Integer.decode(properties.getProperty("id"));
+            name = properties.getProperty("name");
             String ip = properties.getProperty("ip");
             int port = Integer.decode(properties.getProperty("port"));
             setLocal(ip,port);
+            address = ip + ":" + Integer.toString(port);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -67,7 +71,7 @@ public class ConfigManager {
             for(String key: prop.stringPropertyNames()){
                 String value = prop.getProperty(key);
                 String[] vs = value.split(":");
-                serverMap.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
+                serverList.add(vs[0]+":"+Integer.parseInt(vs[1]));
             }
             if(debug == false){
                 return;
@@ -77,7 +81,7 @@ public class ConfigManager {
             for(String key: prop.stringPropertyNames()){
                 String value = prop.getProperty(key);
                 String[] vs = value.split(":");
-                serverMapTest.put(Integer.parseInt(key),new InetSocketAddress(vs[0],Integer.parseInt(vs[1])));
+                serverTestList.add(vs[0]+":"+Integer.parseInt(vs[1]));
             }
 
             Log.logger.info("ConfigManager.initServers: init serverMap completed.");

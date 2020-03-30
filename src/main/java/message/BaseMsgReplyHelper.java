@@ -4,16 +4,22 @@ import log.Log;
 import protobuf.BaseMsgProto;
 import server.BaseServer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.concurrent.*;
 
 public class BaseMsgReplyHelper {
     /**
-     * 投票等环节中存在消息发出后需要等待一个或多个消息回复的情况，
-     * 初始消息（如发起投票的消息）发出后，在MessageManager中异步线程等待，
-     * 并在BaseMsgReplyHelper中添加一个记录
-     * MessageManager在receiveMsg中收到Msg后检查BaseMsgReplyHelper所有记录，找到对应的记录并且操作
-     * 当所有的回复信息都收到后，删除对应的记录并通知初始消息的线程，结束等待
+     * 回复消息等待器
+     * 用于处理投票、询问等环节中，存在消息发出后需要等待一个或多个消息回复的情况
+     * 需要回复的初始消息（如发起投票的消息）发出后，在MessageManager中生成一个线程，并且注册一个等待器
+     * MessageManager在receiveMsg中收到Msg后检查BaseMsgReplyHelper所有等待器，找到对应的等待器并且操作
+     * 当所有的回复信息都收到或等待器超时后，删除对应的等待器并通知初始消息的线程，结束等待（或者该线程自己超时）
+     *
+     * 等待器MsgWaiter可以用于存储收到的回复信息中携带的数据，MsgWaiter的对象引用暴露给发送信息的API，
+     * 该API可以在回调函数中检查MsgWaiter的数据，执行自己的业务逻辑
+     * 回调函数的接口为BaseMsgCallBack
      * */
     // BaseServer引用
     private BaseServer baseServer;
@@ -28,87 +34,81 @@ public class BaseMsgReplyHelper {
         replyHelperMap = new ConcurrentHashMap<Long, MsgWaiter>();
     }
     /**
-     * @Param msg 被注册BaseReplyHelper的需要回复的消息
-     *
+     * 注册回复消息工具
+     * 被注册的回复消息工具会在timeout时间内存活，将存活时间内收到的回复信息存储
+     * @param msg 被注册BaseReplyHelper的需要回复的消息
+     * @param senderCountDownLatch
      * */
-    public void registerReplyHelper(BaseMsgProto.BaseMsg msg,CountDownLatch senderCountDownLatch,boolean needTimeout){
-        replyHelperMap.put(msg.getMsgUuid(),new MsgWaiter(msg.getNeedReplyNum(),msg.getTimeout()));
-        MsgWaiter msgWaiter = replyHelperMap.get(msg.getMsgUuid());
+    public MsgWaiter registerReplyHelper(BaseMsgProto.BaseMsg msg,
+                                    CountDownLatch senderCountDownLatch){
+        MsgWaiter msgWaiter = new MsgWaiter(msg.getMsgUuid(),msg.getNeedReplyNum(),msg.getTimeout());
+
+        replyHelperMap.put(msg.getMsgUuid(),msgWaiter);
 
         FutureTask futureTask = new FutureTask(new Callable() {
             @Override
             public Object call()  {
-                Log.info(baseServer.id,"msg uuid="+msg.getMsgUuid()+" started waiting for reply...");
-                // 等待totalReplyNum个回复
+                // Log.info(baseServer.address,"MsgWaiter:msg uuid="+msg.getMsgUuid()+" started waiting for reply...");
+                // 等待totalReplyNum个回复或者timeout
                 try {
-                    if(needTimeout){
-                        msgWaiter.countDownLatch.await(msgWaiter.timeout,TimeUnit.MILLISECONDS);
-                    }else{
-                        msgWaiter.countDownLatch.await();
-                    }
-                    Log.info(baseServer.id,"msg uuid="+msg.getMsgUuid()+" received full reply!");
-                    //收到回复，通知发送方
-                    senderCountDownLatch.countDown();
+                    msgWaiter.countDownLatch.await(msgWaiter.timeout,TimeUnit.MILLISECONDS);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    if(e instanceof InterruptedException){
-                        // 默认为超时
-                    }
+                    // TODO
+                    msgWaiter.updateStatus(-1);
                 }finally {
+                    // 解除调用处(sendMsgWithReply)的等待
+                    senderCountDownLatch.countDown();
+                    // 将MsgWaiter从存储中删除
                     replyHelperMap.remove(msg.getMsgUuid());
                 }
                 return null;
             }
         });
         replyHelperExecutor.submit(futureTask);
-        return;
+        return msgWaiter;
     }
     /**
      * 通知发起者msg
-     * @param msgUUid 收到的回复msg中回复目的信息的uuid
+     * @param replyMsg 收到的信息
+     * @return 执行是否成功
      * */
-    public boolean replyNotify(Long replyMsgUUid,Long msgUUid){
+    public MsgWaiter replyNotify(Object replyMsg){
+        if(null == replyMsg){
+            return null;
+        }
+        BaseMsgProto.BaseMsg msg = (BaseMsgProto.BaseMsg) replyMsg;
+
         synchronized (replyHelperMap){
-            if(!replyHelperMap.keySet().contains(replyMsgUUid)){
-                return true;
+            // 检查是否存在被回复的目标
+            if(!replyHelperMap.keySet().contains(msg.getMsgReplyUuid())){
+                // 无被回复的目标
+                return null;
             }
             else{
-                MsgWaiter msgWaiter = replyHelperMap.get(replyMsgUUid);
-                if(msgWaiter.countDown()){
-                    Log.info(baseServer.id,"replyMsg uuid="+msgUUid+" to reply msg uuid="+replyMsgUUid+
-                            ", received count="+msgWaiter.countDownLatch.getCount());
-                    return true;
+                try {
+                    // 找到等待器
+                    MsgWaiter msgWaiter = replyHelperMap.get(msg.getMsgReplyUuid());
+                    // 尝试countDown
+                    if(msgWaiter.countDown()){
+                        Log.info(baseServer.address,"replyMsg uuid="+msg.getMsgUuid()+" to reply msg uuid="+msg.getMsgReplyUuid()+
+                                ", received count="+msgWaiter.countDownLatch.getCount());
+                        // 成功，msg添加等待器中
+                        msgWaiter.insert(msg.getServerSenderAddress(),msg);
+                        return msgWaiter;
+                    }
+                }catch (Exception e){
+                    if(e instanceof NullPointerException){
+                        Log.info(baseServer.address,"invalid replyMsg");
+                        return null;
+                    }
                 }
+
             }
-            return false;
+            return null;
         }
 
     }
 
 
-    class MsgWaiter{
-        /**
-         * MsgWaiter 封装了需要被回复的BaseMsg相关信息
-         * 在得到了所有的回复或超时后，自动销毁
-         * */
-        // 需要的回复个数
-        int totalReplyNum;
-        // 超时
-        int timeout;
-        CountDownLatch countDownLatch;
-        MsgWaiter(int totalReplyNum,int timeout){
-            this.totalReplyNum = totalReplyNum;
-            this.timeout = timeout;
-            this.countDownLatch = new CountDownLatch(totalReplyNum);
-        }
-        private synchronized boolean countDown(){
-            try{
-                countDownLatch.countDown();
-            }catch (Exception e){
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
-    }
+
 }

@@ -1,7 +1,9 @@
 package message;
 
+import protobuf.BaseMsgProto;
+
 public interface IMessageManager {
-    public void sendMsg();
-    public void sendMsgWithReply();
-    public void receiveMsg();
+    void sendMsg(Object msg,String receiver_address);
+    void sendMsgWithReply(Object msg, String receiver_address, int timeout, Object baseMsgCallBack);
+    void receiveMsg(Object msg);
 }

@@ -8,7 +8,7 @@ message BaseMsg {
     int32 msg_type = 1;
 
     // the sequence number in sender server
-    int32 msg_sequence_number = 2;
+    int64 msg_sequence_number = 2;
 
     // the uuid of msg, made up by sender server's id, sequence number and timestamp
     int64 msg_uuid = 3;
@@ -16,14 +16,14 @@ message BaseMsg {
     // if this msg is a reply to any action, record the uuid of the msg needed reply
     int64 msg_reply_uuid = 4;
 
-    // sender server id
-    int32 server_sender_id = 5;
+    // sender server address(address = ip:host)
+    string server_sender_address = 5;
 
-    // single receiver server id
-    int32 server_single_receiver_id = 6;
+    // single receiver server address
+    string server_single_receiver_address = 6;
 
     // multi receiver server id
-    repeated int32 server_multi_receiver_id = 7;
+    repeated string server_multi_receiver_address = 7;
 
     // if this msg needs timeout in reply
     int32 timeout = 8;
