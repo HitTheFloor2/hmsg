@@ -21,4 +21,5 @@ public class BaseServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         baseServer.messageManager.receiveMsg(msg);
     }
+
 }

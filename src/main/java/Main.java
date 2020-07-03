@@ -1,8 +1,6 @@
 import log.Log;
-import manager.ConfigManager;
+import config.ConfigManager;
 import server.BaseServer;
-
-import java.net.InetSocketAddress;
 
 public class Main {
     public static void main(String args[]){

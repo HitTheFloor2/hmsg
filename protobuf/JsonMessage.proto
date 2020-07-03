@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_outer_classname = "JsonMessageProto";
+
+message JsonMessage {
+
+    // the type of msg
+    int32 msg_type = 1;
+
+    // content
+    string content = 2;
+}

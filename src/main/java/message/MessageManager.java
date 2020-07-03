@@ -35,7 +35,7 @@ public class MessageManager implements IMessageManager{
     private ExecutorService receiveExecutor;
     // 同步回复信息工具
     BaseMsgReplyHelper baseMsgReplyHelper;
-    // 解析JSON工具
+    // 解析JSON工具，按照文档的建议是全局单例
     private ObjectMapper mapper;
 
     public MessageManager(BaseServer baseServer){

@@ -23,7 +23,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         System.out.println("This echo server receive order : " + body);
         String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body) ? new Date(System.currentTimeMillis()).toString() : "BAD ORDER";
         ByteBuf resp = Unpooled.copiedBuffer(currentTime.getBytes());
-        ctx.write(resp);
+        ctx.writeAndFlush(resp);
     }
 
     @Override

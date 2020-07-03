@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     private final ByteBuf firstMessage;
+    private final ByteBuf firstMessage2;
 
     /**
      * Creates a client-side handler.
@@ -29,11 +30,15 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
         byte[] req = "QUERY TIME ORDER".getBytes();
         firstMessage = Unpooled.buffer(req.length);
         firstMessage.writeBytes(req);
+        // byte[] req = "QUERY TIME ORDER".getBytes();
+        firstMessage2 = Unpooled.buffer(req.length);
+        firstMessage2.writeBytes(req);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         ctx.writeAndFlush(firstMessage);
+        ctx.writeAndFlush(firstMessage2);
     }
 
     @Override

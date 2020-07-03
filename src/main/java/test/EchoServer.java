@@ -50,6 +50,7 @@ public final class EchoServer {
                             if (sslCtx != null) {
                                 p.addLast(sslCtx.newHandler(ch.alloc()));
                             }
+                            System.out.println("add handler");
                             //p.addLast(new LoggingHandler(LogLevel.INFO));
                             p.addLast(serverHandler);
                         }
